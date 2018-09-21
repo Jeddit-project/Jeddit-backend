@@ -1,13 +1,14 @@
 package com.jeddit.backend.models
 
-import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.dao.LongIdTable
 
 
-object Post: Table() {
-    val id = uuid("id").primaryKey()
+object Post: LongIdTable() {
     val title = varchar("title", 255)
     val text = text("text")
     val image = varchar("image", 255)
-    val user_id = (uuid("user_id") references User.id)
-    val subjeddit_id = (uuid("subjeddit_id") references Subjeddit.id)
+    val points = integer("points")
+    val comments = integer("comments")
+    val user = reference("user", User)
+    val subjeddit = reference("subjeddit", Subjeddit)
 }

@@ -1,10 +1,9 @@
 package com.jeddit.backend.models
 
-import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.dao.LongIdTable
 
 
-object Subscription: Table() {
-    val id = uuid("id").primaryKey()
-    val user_id = uuid("user_id") references User.id
-    val subjeddit_id = uuid("subjeddit_id") references Subjeddit.id
+object Subscription: LongIdTable() {
+    val user = reference("user", User)
+    val subjeddit = reference("subjeddit", Subjeddit)
 }

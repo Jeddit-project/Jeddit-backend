@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataSource name="redditdb@www.db4free.net">
-  <database-model serializer="dbm" rdbms="MYSQL" format-version="4.9">
+  <database-model serializer="dbm" rdbms="MYSQL" format-version="4.11">
     <root id="1">
       <ServerVersion>8.0.12</ServerVersion>
       <DefaultEngine>InnoDB</DefaultEngine>
@@ -1101,8 +1101,9 @@
     <table id="277" parent="3" name="User"/>
     <column id="278" parent="274" name="id">
       <Position>1</Position>
-      <DataType>binary(16)|0s</DataType>
+      <DataType>bigint(20)|0s</DataType>
       <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
     <column id="279" parent="274" name="title">
@@ -1123,24 +1124,24 @@
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="282" parent="274" name="user_id">
+    <column id="282" parent="274" name="user">
       <Position>5</Position>
-      <DataType>binary(16)|0s</DataType>
+      <DataType>bigint(20)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="283" parent="274" name="subjeddit_id">
+    <column id="283" parent="274" name="subjeddit">
       <Position>6</Position>
-      <DataType>binary(16)|0s</DataType>
+      <DataType>bigint(20)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="284" parent="274" name="user_id">
-      <ColNames>user_id</ColNames>
+    <index id="284" parent="274" name="user">
+      <ColNames>user</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="285" parent="274" name="subjeddit_id">
-      <ColNames>subjeddit_id</ColNames>
+    <index id="285" parent="274" name="subjeddit">
+      <ColNames>subjeddit</ColNames>
       <Type>btree</Type>
     </index>
     <key id="286" parent="274" name="PRIMARY">
@@ -1149,21 +1150,22 @@
       <Primary>1</Primary>
     </key>
     <foreign-key id="287" parent="274" name="Post_ibfk_1">
-      <ColNames>user_id</ColNames>
+      <ColNames>user</ColNames>
       <RefSchemaName>redditdb</RefSchemaName>
       <RefTableName>User</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
     <foreign-key id="288" parent="274" name="Post_ibfk_2">
-      <ColNames>subjeddit_id</ColNames>
+      <ColNames>subjeddit</ColNames>
       <RefSchemaName>redditdb</RefSchemaName>
       <RefTableName>Subjeddit</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
     <column id="289" parent="275" name="id">
       <Position>1</Position>
-      <DataType>binary(16)|0s</DataType>
+      <DataType>bigint(20)|0s</DataType>
       <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
     <column id="290" parent="275" name="name">
@@ -1191,28 +1193,29 @@
     </key>
     <column id="294" parent="276" name="id">
       <Position>1</Position>
-      <DataType>binary(16)|0s</DataType>
+      <DataType>bigint(20)|0s</DataType>
       <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="295" parent="276" name="user_id">
+    <column id="295" parent="276" name="user">
       <Position>2</Position>
-      <DataType>binary(16)|0s</DataType>
+      <DataType>bigint(20)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="296" parent="276" name="subjeddit_id">
+    <column id="296" parent="276" name="subjeddit">
       <Position>3</Position>
-      <DataType>binary(16)|0s</DataType>
+      <DataType>bigint(20)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="297" parent="276" name="user_id">
-      <ColNames>user_id</ColNames>
+    <index id="297" parent="276" name="user">
+      <ColNames>user</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="298" parent="276" name="subjeddit_id">
-      <ColNames>subjeddit_id</ColNames>
+    <index id="298" parent="276" name="subjeddit">
+      <ColNames>subjeddit</ColNames>
       <Type>btree</Type>
     </index>
     <key id="299" parent="276" name="PRIMARY">
@@ -1221,21 +1224,22 @@
       <Primary>1</Primary>
     </key>
     <foreign-key id="300" parent="276" name="Subscription_ibfk_1">
-      <ColNames>user_id</ColNames>
+      <ColNames>user</ColNames>
       <RefSchemaName>redditdb</RefSchemaName>
       <RefTableName>User</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
     <foreign-key id="301" parent="276" name="Subscription_ibfk_2">
-      <ColNames>subjeddit_id</ColNames>
+      <ColNames>subjeddit</ColNames>
       <RefSchemaName>redditdb</RefSchemaName>
       <RefTableName>Subjeddit</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
     <column id="302" parent="277" name="id">
       <Position>1</Position>
-      <DataType>binary(16)|0s</DataType>
+      <DataType>bigint(20)|0s</DataType>
       <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
     <column id="303" parent="277" name="first_name">
@@ -1250,13 +1254,19 @@
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="305" parent="277" name="password_hash">
+    <column id="305" parent="277" name="username">
       <Position>4</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="306" parent="277" name="password_hash">
+      <Position>5</Position>
       <DataType>varchar(64)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="306" parent="277" name="PRIMARY">
+    <key id="307" parent="277" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
