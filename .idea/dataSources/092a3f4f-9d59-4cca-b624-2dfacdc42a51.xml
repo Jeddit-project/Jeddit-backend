@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="db">
+  <database-model serializer="dbm" rdbms="SQLITE" format-version="4.11">
+    <root id="1">
+      <ServerVersion>3.20.1</ServerVersion>
+    </root>
+    <schema id="2" parent="1" name="main">
+      <Current>1</Current>
+      <Visible>1</Visible>
+    </schema>
+    <collation id="3" parent="1" name="BINARY"/>
+    <collation id="4" parent="1" name="NOCASE"/>
+    <collation id="5" parent="1" name="RTRIM"/>
+    <table id="6" parent="2" name="Comment"/>
+    <table id="7" parent="2" name="CommentVote"/>
+    <table id="8" parent="2" name="Post"/>
+    <table id="9" parent="2" name="PostVote"/>
+    <table id="10" parent="2" name="Subjeddit"/>
+    <table id="11" parent="2" name="Subscription"/>
+    <table id="12" parent="2" name="User"/>
+    <table id="13" parent="2" name="VoteType"/>
+    <table id="14" parent="2" name="sqlite_master">
+      <System>1</System>
+    </table>
+    <table id="15" parent="2" name="sqlite_sequence">
+      <System>1</System>
+    </table>
+    <column id="16" parent="6" name="id">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="17" parent="6" name="text">
+      <Position>2</Position>
+      <DataType>text|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="18" parent="6" name="user">
+      <Position>3</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="19" parent="6" name="post">
+      <Position>4</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="20" parent="6" name="comment">
+      <Position>5</Position>
+      <DataType>integer|0s</DataType>
+      <DefaultExpression>NULL</DefaultExpression>
+    </column>
+    <column id="21" parent="6" name="created_at">
+      <Position>6</Position>
+      <DataType>integer|0s</DataType>
+    </column>
+    <column id="22" parent="6" name="updated_at">
+      <Position>7</Position>
+      <DataType>integer|0s</DataType>
+    </column>
+    <index id="23" parent="6" name="idx_Comment_user">
+      <ColNames>user</ColNames>
+      <ColumnCollations></ColumnCollations>
+    </index>
+    <index id="24" parent="6" name="idx_Comment_post">
+      <ColNames>post</ColNames>
+      <ColumnCollations></ColumnCollations>
+    </index>
+    <index id="25" parent="6" name="idx_Comment_comment">
+      <ColNames>comment</ColNames>
+      <ColumnCollations></ColumnCollations>
+    </index>
+    <key id="26" parent="6">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="27" parent="6" name="Comment_ibfk_1">
+      <ColNames>user</ColNames>
+      <RefTableName>User</RefTableName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
+    <foreign-key id="28" parent="6" name="Comment_ibfk_2">
+      <ColNames>post</ColNames>
+      <RefTableName>Post</RefTableName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
+    <foreign-key id="29" parent="6" name="Comment_ibfk_3">
+      <ColNames>comment</ColNames>
+      <RefTableName>Commenta8dc</RefTableName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
+    <column id="30" parent="7" name="id">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="31" parent="7" name="comment">
+      <Position>2</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="32" parent="7" name="user">
+      <Position>3</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="33" parent="7" name="vote_type">
+      <Position>4</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="34" parent="7" name="idx_CommentVote_comment">
+      <ColNames>comment</ColNames>
+      <ColumnCollations></ColumnCollations>
+    </index>
+    <index id="35" parent="7" name="idx_CommentVote_user">
+      <ColNames>user</ColNames>
+      <ColumnCollations></ColumnCollations>
+    </index>
+    <index id="36" parent="7" name="idx_CommentVote_vote_type">
+      <ColNames>vote_type</ColNames>
+      <ColumnCollations></ColumnCollations>
+    </index>
+    <key id="37" parent="7">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="38" parent="7" name="CommentVote_ibfk_1">
+      <ColNames>comment</ColNames>
+      <RefTableName>Comment</RefTableName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
+    <foreign-key id="39" parent="7" name="CommentVote_ibfk_2">
+      <ColNames>user</ColNames>
+      <RefTableName>User</RefTableName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
+    <foreign-key id="40" parent="7" name="CommentVote_ibfk_3">
+      <ColNames>vote_type</ColNames>
+      <RefTableName>VoteType</RefTableName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
+    <column id="41" parent="8" name="id">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="42" parent="8" name="title">
+      <Position>2</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="43" parent="8" name="text">
+      <Position>3</Position>
+      <DataType>text|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="44" parent="8" name="image">
+      <Position>4</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="45" parent="8" name="user">
+      <Position>5</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="46" parent="8" name="subjeddit">
+      <Position>6</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="47" parent="8" name="idx_Post_user">
+      <ColNames>user</ColNames>
+      <ColumnCollations></ColumnCollations>
+    </index>
+    <index id="48" parent="8" name="idx_Post_subjeddit">
+      <ColNames>subjeddit</ColNames>
+      <ColumnCollations></ColumnCollations>
+    </index>
+    <key id="49" parent="8">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="50" parent="8" name="Post_ibfk_1">
+      <ColNames>user</ColNames>
+      <RefTableName>User</RefTableName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
+    <foreign-key id="51" parent="8" name="Post_ibfk_2">
+      <ColNames>subjeddit</ColNames>
+      <RefTableName>Subjeddit</RefTableName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
+    <column id="52" parent="9" name="id">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="53" parent="9" name="post">
+      <Position>2</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="54" parent="9" name="user">
+      <Position>3</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="55" parent="9" name="vote_type">
+      <Position>4</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="56" parent="9" name="idx_PostVote_post">
+      <ColNames>post</ColNames>
+      <ColumnCollations></ColumnCollations>
+    </index>
+    <index id="57" parent="9" name="idx_PostVote_user">
+      <ColNames>user</ColNames>
+      <ColumnCollations></ColumnCollations>
+    </index>
+    <index id="58" parent="9" name="idx_PostVote_vote_type">
+      <ColNames>vote_type</ColNames>
+      <ColumnCollations></ColumnCollations>
+    </index>
+    <key id="59" parent="9">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="60" parent="9" name="PostVote_ibfk_1">
+      <ColNames>post</ColNames>
+      <RefTableName>Post</RefTableName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
+    <foreign-key id="61" parent="9" name="PostVote_ibfk_2">
+      <ColNames>user</ColNames>
+      <RefTableName>User</RefTableName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
+    <foreign-key id="62" parent="9" name="PostVote_ibfk_3">
+      <ColNames>vote_type</ColNames>
+      <RefTableName>VoteType</RefTableName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
+    <column id="63" parent="10" name="id">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="64" parent="10" name="name">
+      <Position>2</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="65" parent="10" name="image">
+      <Position>3</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="66" parent="10" name="description">
+      <Position>4</Position>
+      <DataType>text|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <key id="67" parent="10">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="68" parent="11" name="id">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="69" parent="11" name="user">
+      <Position>2</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="70" parent="11" name="subjeddit">
+      <Position>3</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="71" parent="11" name="idx_Subscription_user">
+      <ColNames>user</ColNames>
+      <ColumnCollations></ColumnCollations>
+    </index>
+    <index id="72" parent="11" name="idx_Subscription_subjeddit">
+      <ColNames>subjeddit</ColNames>
+      <ColumnCollations></ColumnCollations>
+    </index>
+    <key id="73" parent="11">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="74" parent="11" name="Subscription_ibfk_1">
+      <ColNames>user</ColNames>
+      <RefTableName>User</RefTableName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
+    <foreign-key id="75" parent="11" name="Subscription_ibfk_2">
+      <ColNames>subjeddit</ColNames>
+      <RefTableName>Subjeddit</RefTableName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
+    <column id="76" parent="12" name="id">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="77" parent="12" name="first_name">
+      <Position>2</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="78" parent="12" name="last_name">
+      <Position>3</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="79" parent="12" name="username">
+      <Position>4</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="80" parent="12" name="password_hash">
+      <Position>5</Position>
+      <DataType>varchar(64)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <key id="81" parent="12">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="82" parent="13" name="id">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="83" parent="13" name="name">
+      <Position>2</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <key id="84" parent="13">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="85" parent="14" name="type">
+      <Position>1</Position>
+      <DataType>text|0s</DataType>
+    </column>
+    <column id="86" parent="14" name="name">
+      <Position>2</Position>
+      <DataType>text|0s</DataType>
+    </column>
+    <column id="87" parent="14" name="tbl_name">
+      <Position>3</Position>
+      <DataType>text|0s</DataType>
+    </column>
+    <column id="88" parent="14" name="rootpage">
+      <Position>4</Position>
+      <DataType>integer|0s</DataType>
+    </column>
+    <column id="89" parent="14" name="sql">
+      <Position>5</Position>
+      <DataType>text|0s</DataType>
+    </column>
+    <column id="90" parent="15" name="name">
+      <Position>1</Position>
+    </column>
+    <column id="91" parent="15" name="seq">
+      <Position>2</Position>
+    </column>
+  </database-model>
+</dataSource>

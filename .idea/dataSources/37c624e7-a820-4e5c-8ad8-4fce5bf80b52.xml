@@ -1095,178 +1095,403 @@
       <Charset>utf8mb4</Charset>
       <DefaultForCharset>0</DefaultForCharset>
     </collation>
-    <table id="274" parent="3" name="Post"/>
-    <table id="275" parent="3" name="Subjeddit"/>
-    <table id="276" parent="3" name="Subscription"/>
-    <table id="277" parent="3" name="User"/>
-    <column id="278" parent="274" name="id">
+    <table id="274" parent="3" name="Comment"/>
+    <table id="275" parent="3" name="CommentVote"/>
+    <table id="276" parent="3" name="Post"/>
+    <table id="277" parent="3" name="PostVote"/>
+    <table id="278" parent="3" name="Subjeddit"/>
+    <table id="279" parent="3" name="Subscription"/>
+    <table id="280" parent="3" name="User"/>
+    <table id="281" parent="3" name="VoteType"/>
+    <column id="282" parent="274" name="id">
       <Position>1</Position>
       <DataType>bigint(20)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="279" parent="274" name="title">
+    <column id="283" parent="274" name="text">
       <Position>2</Position>
-      <DataType>varchar(255)|0s</DataType>
-      <NotNull>1</NotNull>
-      <ColumnKind>normal</ColumnKind>
-    </column>
-    <column id="280" parent="274" name="text">
-      <Position>3</Position>
       <DataType>text|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="281" parent="274" name="image">
-      <Position>4</Position>
-      <DataType>varchar(255)|0s</DataType>
+    <column id="284" parent="274" name="time">
+      <Position>3</Position>
+      <DataType>bigint(20)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="282" parent="274" name="user">
+    <column id="285" parent="274" name="user">
+      <Position>4</Position>
+      <DataType>bigint(20)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="286" parent="274" name="post">
       <Position>5</Position>
       <DataType>bigint(20)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="283" parent="274" name="subjeddit">
+    <column id="287" parent="274" name="comment">
       <Position>6</Position>
       <DataType>bigint(20)|0s</DataType>
-      <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="284" parent="274" name="user">
+    <index id="288" parent="274" name="user">
       <ColNames>user</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="285" parent="274" name="subjeddit">
-      <ColNames>subjeddit</ColNames>
+    <index id="289" parent="274" name="post">
+      <ColNames>post</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="286" parent="274" name="PRIMARY">
+    <index id="290" parent="274" name="comment">
+      <ColNames>comment</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="291" parent="274" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="287" parent="274" name="Post_ibfk_1">
+    <foreign-key id="292" parent="274" name="Comment_ibfk_1">
       <ColNames>user</ColNames>
       <RefSchemaName>redditdb</RefSchemaName>
       <RefTableName>User</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="288" parent="274" name="Post_ibfk_2">
-      <ColNames>subjeddit</ColNames>
+    <foreign-key id="293" parent="274" name="Comment_ibfk_2">
+      <ColNames>post</ColNames>
       <RefSchemaName>redditdb</RefSchemaName>
-      <RefTableName>Subjeddit</RefTableName>
+      <RefTableName>Post</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="289" parent="275" name="id">
+    <foreign-key id="294" parent="274" name="Comment_ibfk_3">
+      <ColNames>comment</ColNames>
+      <RefSchemaName>redditdb</RefSchemaName>
+      <RefTableName>Comment</RefTableName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
+    <column id="295" parent="275" name="id">
       <Position>1</Position>
       <DataType>bigint(20)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="290" parent="275" name="name">
+    <column id="296" parent="275" name="comment">
+      <Position>2</Position>
+      <DataType>bigint(20)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="297" parent="275" name="user">
+      <Position>3</Position>
+      <DataType>bigint(20)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="298" parent="275" name="vote_type">
+      <Position>4</Position>
+      <DataType>bigint(20)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <index id="299" parent="275" name="comment">
+      <ColNames>comment</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="300" parent="275" name="user">
+      <ColNames>user</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="301" parent="275" name="vote_type">
+      <ColNames>vote_type</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="302" parent="275" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="303" parent="275" name="CommentVote_ibfk_1">
+      <ColNames>comment</ColNames>
+      <RefSchemaName>redditdb</RefSchemaName>
+      <RefTableName>Comment</RefTableName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
+    <foreign-key id="304" parent="275" name="CommentVote_ibfk_2">
+      <ColNames>user</ColNames>
+      <RefSchemaName>redditdb</RefSchemaName>
+      <RefTableName>User</RefTableName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
+    <foreign-key id="305" parent="275" name="CommentVote_ibfk_3">
+      <ColNames>vote_type</ColNames>
+      <RefSchemaName>redditdb</RefSchemaName>
+      <RefTableName>VoteType</RefTableName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
+    <column id="306" parent="276" name="id">
+      <Position>1</Position>
+      <DataType>bigint(20)|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="307" parent="276" name="title">
       <Position>2</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="291" parent="275" name="image">
+    <column id="308" parent="276" name="text">
+      <Position>3</Position>
+      <DataType>text|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="309" parent="276" name="image">
+      <Position>4</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="310" parent="276" name="points">
+      <Position>5</Position>
+      <DataType>int(11)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="311" parent="276" name="comments">
+      <Position>6</Position>
+      <DataType>int(11)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="312" parent="276" name="user">
+      <Position>7</Position>
+      <DataType>bigint(20)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="313" parent="276" name="subjeddit">
+      <Position>8</Position>
+      <DataType>bigint(20)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <index id="314" parent="276" name="user">
+      <ColNames>user</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="315" parent="276" name="subjeddit">
+      <ColNames>subjeddit</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="316" parent="276" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="317" parent="276" name="Post_ibfk_1">
+      <ColNames>user</ColNames>
+      <RefSchemaName>redditdb</RefSchemaName>
+      <RefTableName>User</RefTableName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
+    <foreign-key id="318" parent="276" name="Post_ibfk_2">
+      <ColNames>subjeddit</ColNames>
+      <RefSchemaName>redditdb</RefSchemaName>
+      <RefTableName>Subjeddit</RefTableName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
+    <column id="319" parent="277" name="id">
+      <Position>1</Position>
+      <DataType>bigint(20)|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="320" parent="277" name="post">
+      <Position>2</Position>
+      <DataType>bigint(20)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="321" parent="277" name="user">
+      <Position>3</Position>
+      <DataType>bigint(20)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="322" parent="277" name="vote_type">
+      <Position>4</Position>
+      <DataType>bigint(20)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <index id="323" parent="277" name="post">
+      <ColNames>post</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="324" parent="277" name="user">
+      <ColNames>user</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="325" parent="277" name="vote_type">
+      <ColNames>vote_type</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="326" parent="277" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="327" parent="277" name="PostVote_ibfk_1">
+      <ColNames>post</ColNames>
+      <RefSchemaName>redditdb</RefSchemaName>
+      <RefTableName>Post</RefTableName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
+    <foreign-key id="328" parent="277" name="PostVote_ibfk_2">
+      <ColNames>user</ColNames>
+      <RefSchemaName>redditdb</RefSchemaName>
+      <RefTableName>User</RefTableName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
+    <foreign-key id="329" parent="277" name="PostVote_ibfk_3">
+      <ColNames>vote_type</ColNames>
+      <RefSchemaName>redditdb</RefSchemaName>
+      <RefTableName>VoteType</RefTableName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
+    <column id="330" parent="278" name="id">
+      <Position>1</Position>
+      <DataType>bigint(20)|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="331" parent="278" name="name">
+      <Position>2</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="332" parent="278" name="image">
       <Position>3</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="292" parent="275" name="description">
+    <column id="333" parent="278" name="description">
       <Position>4</Position>
       <DataType>text|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="293" parent="275" name="PRIMARY">
+    <key id="334" parent="278" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="294" parent="276" name="id">
+    <column id="335" parent="279" name="id">
       <Position>1</Position>
       <DataType>bigint(20)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="295" parent="276" name="user">
+    <column id="336" parent="279" name="user">
       <Position>2</Position>
       <DataType>bigint(20)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="296" parent="276" name="subjeddit">
+    <column id="337" parent="279" name="subjeddit">
       <Position>3</Position>
       <DataType>bigint(20)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="297" parent="276" name="user">
+    <index id="338" parent="279" name="user">
       <ColNames>user</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="298" parent="276" name="subjeddit">
+    <index id="339" parent="279" name="subjeddit">
       <ColNames>subjeddit</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="299" parent="276" name="PRIMARY">
+    <key id="340" parent="279" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="300" parent="276" name="Subscription_ibfk_1">
+    <foreign-key id="341" parent="279" name="Subscription_ibfk_1">
       <ColNames>user</ColNames>
       <RefSchemaName>redditdb</RefSchemaName>
       <RefTableName>User</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="301" parent="276" name="Subscription_ibfk_2">
+    <foreign-key id="342" parent="279" name="Subscription_ibfk_2">
       <ColNames>subjeddit</ColNames>
       <RefSchemaName>redditdb</RefSchemaName>
       <RefTableName>Subjeddit</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="302" parent="277" name="id">
+    <column id="343" parent="280" name="id">
       <Position>1</Position>
       <DataType>bigint(20)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="303" parent="277" name="first_name">
+    <column id="344" parent="280" name="first_name">
       <Position>2</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="304" parent="277" name="last_name">
+    <column id="345" parent="280" name="last_name">
       <Position>3</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="305" parent="277" name="username">
+    <column id="346" parent="280" name="username">
       <Position>4</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="306" parent="277" name="password_hash">
+    <column id="347" parent="280" name="password_hash">
       <Position>5</Position>
       <DataType>varchar(64)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="307" parent="277" name="PRIMARY">
+    <key id="348" parent="280" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="349" parent="281" name="id">
+      <Position>1</Position>
+      <DataType>bigint(20)|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="350" parent="281" name="name">
+      <Position>2</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <key id="351" parent="281" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>

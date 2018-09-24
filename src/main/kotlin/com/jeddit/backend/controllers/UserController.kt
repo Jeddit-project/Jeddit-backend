@@ -1,90 +1,76 @@
 package com.jeddit.backend.controllers
 
-import com.jeddit.backend.models.Post
-import com.jeddit.backend.models.Subjeddit
-import com.jeddit.backend.models.Subscription
-import com.jeddit.backend.models.User
+import com.jeddit.backend.models.*
 import org.jetbrains.exposed.dao.EntityID
 import org.jetbrains.exposed.dao.LongEntity
 import org.jetbrains.exposed.dao.LongEntityClass
-import org.jetbrains.exposed.sql.Expression
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.web.bind.annotation.*
 
-data class UserPOJO(val id: Long, val username: String)
-class Userdd(id: EntityID<Long>): LongEntity(id) {
-    companion object : LongEntityClass<Userdd>(User)
+data class FeedPostUserPOJO(val id: Long, val username: String)
+class FeedPostUserDTO(id: EntityID<Long>): LongEntity(id) {
+    companion object : LongEntityClass<FeedPostUserDTO>(User)
 
     var username by User.username
 
-    fun toUserPOJO(): UserPOJO = UserPOJO(id.value, username)
+    fun toPOJO(): FeedPostUserPOJO = FeedPostUserPOJO(id.value, username)
 }
 
-data class SubjedditPOJO(val id: Long, val name: String, val image: String)
-class Subjedditdd(id: EntityID<Long>): LongEntity(id) {
-    companion object : LongEntityClass<Subjedditdd>(Subjeddit)
+data class FeedPostSubjedditPOJO(val id: Long, val name: String, val image: String)
+class FeedPostSubjedditDTO(id: EntityID<Long>): LongEntity(id) {
+    companion object : LongEntityClass<FeedPostSubjedditDTO>(Subjeddit)
 
     var name by Subjeddit.name
     var image by Subjeddit.image
 
-    fun toSubjedditPOJO(): SubjedditPOJO = SubjedditPOJO(id.value, name, image)
+    fun toPOJO(): FeedPostSubjedditPOJO = FeedPostSubjedditPOJO(id.value, name, image)
 }
 
-data class PostPOJO(val id: Long, val title: String, val text: String, val points: Int, val comments: Int, val subjeddit: SubjedditPOJO, val poster: UserPOJO)
-class Postdd(id: EntityID<Long>): LongEntity(id) {
-    companion object : LongEntityClass<Postdd>(Post)
+data class FeedPostPOJO(val id: Long, val title: String, val text: String, val points: Int, val comments: Int, val subjeddit: FeedPostSubjedditPOJO, val poster: FeedPostUserPOJO)
+class FeedPostDTO(id: EntityID<Long>): LongEntity(id) {
+    companion object : LongEntityClass<FeedPostDTO>(Post)
 
     var title by Post.title
     var text by Post.text
-    var points by Post.points
-    var comments by Post.comments
-    var subjeddit by Subjedditdd referencedOn Post.subjeddit
-    var poster by Userdd referencedOn Post.user
 
-    fun toPostPOJO(): PostPOJO = PostPOJO(id.value, title, text, points, comments, subjeddit.toSubjedditPOJO(), poster.toUserPOJO())
+    var points = 0
+    var comments = 0
+
+    var subjeddit by FeedPostSubjedditDTO referencedOn Post.subjeddit
+    var poster by FeedPostUserDTO referencedOn Post.user
+
+    fun toPostPOJO(): FeedPostPOJO = FeedPostPOJO(id.value, title, text, points, comments, subjeddit.toPOJO(), poster.toPOJO())
 }
 
 
 @CrossOrigin(origins = arrayOf("*"))
 @RestController
 class UserController {
-//    @Autowired
-//    lateinit var userRepository: UserRepository
 
     @GetMapping("/test")
-    fun test(): List<PostPOJO> {
+    fun test(): List<FeedPostPOJO> {
         return transaction {
-
-            val fields = arrayListOf<Expression<*>>(
-                    Post.id,
-                    Post.title,
-                    Post.text,
-                    Post.image,
-                    Post.user,
-                    Post.subjeddit,
-//                    Subjeddit.name,
-                    User.id,
-                    User.first_name,
-                    User.last_name,
-                    User.username,
-
-                    Subjeddit.id,
-                    Subjeddit.name,
-                    Subjeddit.image
-            )
-
-            val query = (Post innerJoin User innerJoin Subjeddit innerJoin Subscription)
-//                    .slice(fields)
+            val query = (Post leftJoin  User leftJoin Subjeddit leftJoin Subscription)
                     .select {
                         (Subscription.user eq 1L) and (Subjeddit.id eq Subscription.subjeddit)
                     }
-                    .withDistinct()
 
             // Return
-            Postdd.wrapRows(query).toList().map {
+            FeedPostDTO.wrapRows(query).toList().map {
+
+                val upvotes = (Post leftJoin PostVote leftJoin VoteType).select {
+                    (PostVote.post eq it.id) and (VoteType.name eq "UPVOTE")
+                }.count()
+
+                val downvotes = (Post leftJoin PostVote leftJoin VoteType).select {
+                    (PostVote.post eq it.id) and (VoteType.name eq "DOWNVOTE")
+                }.count()
+
+                it.points = upvotes - downvotes
+                it.comments = (Post leftJoin Comment).select { Comment.post eq it.id }.count()
+
                 it.toPostPOJO()
             }
         }
