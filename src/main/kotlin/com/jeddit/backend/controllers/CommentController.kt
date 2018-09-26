@@ -96,7 +96,7 @@ class CommentController {
                 calculatePoints(it)
             }
 
-            topComments.map { println(it.updated_at); it.toPOJO() }
+            topComments.map { it.toPOJO() }
         }
     }
 }

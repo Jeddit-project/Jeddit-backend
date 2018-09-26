@@ -47,11 +47,13 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-actuator')
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.springframework.boot:spring-boot-starter-web')
-	compile 'mysql:mysql-connector-java'
+	compile('org.springframework.boot:spring-boot-starter-security')
+	compile('mysql:mysql-connector-java')
+	compile('io.jsonwebtoken:jjwt:0.9.1')
 
-	compile 'org.jetbrains.exposed:exposed:0.10.5'
+	compile('org.jetbrains.exposed:exposed:0.10.5')
 //	compile "mysql:mysql-connector-java:5.1.46"
-	compile "org.xerial:sqlite-jdbc:3.21.0.1"
+	compile("org.xerial:sqlite-jdbc:3.21.0.1")
 
 	compile('com.fasterxml.jackson.module:jackson-module-kotlin')
 	compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
