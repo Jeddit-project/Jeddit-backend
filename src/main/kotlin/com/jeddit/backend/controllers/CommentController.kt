@@ -81,7 +81,6 @@ fun calculatePoints(comment: CommentDTO) {
     }
 }
 
-@CrossOrigin(origins = arrayOf("*"))
 @RestController
 class CommentController {
 

@@ -18,11 +18,7 @@ import org.springframework.security.authentication.DisabledException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
-import org.springframework.web.bind.annotation.ExceptionHandler
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 class AuthenticationRestController {
@@ -40,6 +36,7 @@ class AuthenticationRestController {
 //    @Qualifier("jwtUserDetailsService")
 //    private val userDetailsService: UserDetailsService? = null
 
+//    @CrossOrigin(origins = arrayOf("*"))
     @RequestMapping(value = "\${jwt.route.authentication.path}", method = arrayOf(RequestMethod.POST))
     @Throws(AuthenticationException::class)
     fun createAuthenticationToken(@RequestBody authenticationRequest: JwtAuthenticationRequest): ResponseEntity<*> {
@@ -57,20 +54,21 @@ class AuthenticationRestController {
         return ResponseEntity.ok<Any>(JwtAuthenticationResponse(token))
     }
 
-//    @RequestMapping(value = "\${jwt.route.authentication.refresh}", method = arrayOf(RequestMethod.GET))
-//    fun refreshAndGetAuthenticationToken(request: HttpServletRequest): ResponseEntity<*> {
-//        val authToken = request.getHeader(tokenHeader)
-//        val token = authToken.substring(7)
-//        val username = jwtTokenUtil!!.getUsernameFromToken(token)
+//    @CrossOrigin(origins = arrayOf("*"))
+    @RequestMapping(value = "\${jwt.route.authentication.refresh}", method = arrayOf(RequestMethod.GET))
+    fun refreshAndGetAuthenticationToken(request: HttpServletRequest): ResponseEntity<*> {
+        val authToken = request.getHeader(tokenHeader)
+        val token = authToken.substring(7)
+        val username = jwtTokenUtil!!.getUsernameFromToken(token)
 //        val user = userDetailsService!!.loadUserByUsername(username) as JwtUser
-//
+
 //        if (jwtTokenUtil!!.canTokenBeRefreshed(token, user.lastPasswordResetDate)) {
-//            val refreshedToken = jwtTokenUtil!!.refreshToken(token)
-//            return ResponseEntity.ok<Any>(JwtAuthenticationResponse(refreshedToken))
+        val refreshedToken = jwtTokenUtil!!.refreshToken(token)
+        return ResponseEntity.ok<Any>(JwtAuthenticationResponse(refreshedToken))
 //        } else {
 //            return ResponseEntity.badRequest().body<Any>(null)
 //        }
-//    }
+    }
 
     @ExceptionHandler(AuthenticationException::class)
     fun handleAuthenticationException(e: AuthenticationException): ResponseEntity<String> {

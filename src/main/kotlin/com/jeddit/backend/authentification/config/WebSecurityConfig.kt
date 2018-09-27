@@ -79,7 +79,10 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                 // Un-secure H2 Database
 //                .antMatchers("/h2-console/**/**").permitAll()
 
-                .antMatchers("/auth/**").permitAll()
+                .antMatchers(
+                        "/auth/**",
+                        "/api/post/*/comments",
+                        "/api/subjeddit/*/info").permitAll()
                 .anyRequest().authenticated()
 
         httpSecurity
