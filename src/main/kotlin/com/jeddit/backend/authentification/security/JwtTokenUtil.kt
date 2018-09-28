@@ -79,9 +79,6 @@ class JwtTokenUtil : Serializable {
         }
 
         claims["id"] = id
-
-        println("CLAIMS " + claims["id"])
-
         return doGenerateToken(claims, username)
     }
 

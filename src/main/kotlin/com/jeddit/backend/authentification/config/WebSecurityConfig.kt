@@ -82,7 +82,9 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                 .antMatchers(
                         "/auth/**",
                         "/api/post/*/comments",
-                        "/api/subjeddit/*/info").permitAll()
+                        "/api/subjeddit/*/info",
+                        "/api/u/*/info",
+                        "/api/registration/**").permitAll()
                 .anyRequest().authenticated()
 
         httpSecurity
@@ -114,7 +116,9 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                         "/*.html",
                         "/favicon.ico",
                         "/**/*.html",
+                        "/**/*.scss",
                         "/**/*.css",
+                        "/**/*.css.map",
                         "/**/*.js"
                 )
 //

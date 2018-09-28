@@ -54,6 +54,7 @@ dependencies {
 	compile('org.jetbrains.exposed:exposed:0.10.5')
 //	compile "mysql:mysql-connector-java:5.1.46"
 	compile("org.xerial:sqlite-jdbc:3.21.0.1")
+	compile("org.mindrot:jbcrypt:0.3")
 
 	compile('com.fasterxml.jackson.module:jackson-module-kotlin')
 	compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
