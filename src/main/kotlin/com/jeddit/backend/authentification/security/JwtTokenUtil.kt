@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component
 import java.io.Serializable
 import java.util.*
 import java.util.function.Function
+import javax.servlet.http.HttpServletRequest
 
 @Component
 class JwtTokenUtil : Serializable {
@@ -26,6 +27,9 @@ class JwtTokenUtil : Serializable {
 
     @Value("\${jwt.expiration}")
     private val expiration: Long? = null
+
+    @Value("\${jwt.header}")
+    lateinit var tokenHeader: String
 
     fun getUsernameFromToken(token: String): String {
         return getClaimFromToken(token, Function { it.subject })
@@ -71,6 +75,18 @@ class JwtTokenUtil : Serializable {
 //    }
 
     // roscale
+    fun getUsernameFromRequest(request: HttpServletRequest): String {
+        val authToken = request.getHeader(tokenHeader)
+        val token = authToken.substring(7)
+        return getUsernameFromToken(token)
+    }
+
+    fun getUsernameFromRequestNullable(request: HttpServletRequest): String? {
+        val authToken = request.getHeader(tokenHeader) ?: return null
+        val token = authToken.substring(7)
+        return getUsernameFromToken(token)
+    }
+
     fun generateToken(username: String): String {
         val claims = HashMap<String, Any>()
 

@@ -1,15 +1,19 @@
 package com.jeddit.backend.controllers
 
+import com.jeddit.backend.authentification.security.JwtTokenUtil
 import com.jeddit.backend.models.*
+import com.jeddit.backend.repositories.UserRepo
 import org.jetbrains.exposed.dao.*
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RestController
 import java.time.Instant
+import javax.servlet.http.HttpServletRequest
 
 
 data class CommentUserPOJO(val id: Long, val username: String)
@@ -21,7 +25,7 @@ class CommentUserDTO(id: EntityID<Long>): LongEntity(id) {
     fun toPOJO(): CommentUserPOJO = CommentUserPOJO(id.value, username)
 }
 
-data class CommentPOJO(val id: Long, val created_at: Long, val updated_at: Long?, val text: String, val points: Int, val user: CommentUserPOJO, val replies: List<CommentPOJO>)
+data class CommentPOJO(val id: Long, val created_at: Long, val updated_at: Long?, val text: String, val points: Int, val vote: String, val user: CommentUserPOJO, val replies: List<CommentPOJO>)
 class CommentDTO(id: EntityID<Long>): LongEntity(id) {
     companion object : LongEntityClass<CommentDTO>(Comment)
 
@@ -30,11 +34,12 @@ class CommentDTO(id: EntityID<Long>): LongEntity(id) {
 
     var text by Comment.text
     var points: Int = 0
+    var vote = "NONE"
 
     var user by CommentUserDTO referencedOn Comment.user
     var replies = listOf<CommentDTO>()
 
-    fun toPOJO(): CommentPOJO = CommentPOJO(id.value, created_at, updated_at, text, points, user.toPOJO(), replies.map { it.toPOJO() })
+    fun toPOJO(): CommentPOJO = CommentPOJO(id.value, created_at, updated_at, text, points, vote, user.toPOJO(), replies.map { it.toPOJO() })
 
     init {
         EntityHook.subscribe { action ->
@@ -81,11 +86,28 @@ fun calculatePoints(comment: CommentDTO) {
     }
 }
 
+fun setVote(comment: CommentDTO, userId: Long) {
+    transaction {
+        val query = (CommentVote leftJoin VoteType).slice(VoteType.name).select { (CommentVote.user eq userId) and (CommentVote.comment eq comment.id) }
+        if (query.count() > 0) {
+            comment.vote = query.map { it[VoteType.name] }[0]
+        }
+    }
+
+    comment.replies.forEach {
+        setVote(it, userId)
+    }
+}
+
 @RestController
 class CommentController {
+    @Autowired
+    lateinit var jwtTokenUtil: JwtTokenUtil
 
     @GetMapping("/api/post/{id}/comments")
-    fun comments(@PathVariable id: Long): List<CommentPOJO> {
+    fun comments(request: HttpServletRequest, @PathVariable id: Long): List<CommentPOJO> {
+        val username = jwtTokenUtil.getUsernameFromRequestNullable(request)
+        val userId = if (username != null) UserRepo.getIdByUsername(username) else null
 
         return transaction {
             val topComments = getTopComments(id)
@@ -93,6 +115,9 @@ class CommentController {
             topComments.forEach {
                 populateReplies(it)
                 calculatePoints(it)
+                if (userId != null) {
+                    setVote(it, userId)
+                }
             }
 
             topComments.map { it.toPOJO() }

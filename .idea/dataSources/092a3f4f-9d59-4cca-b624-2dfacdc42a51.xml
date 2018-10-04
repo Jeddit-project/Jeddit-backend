@@ -61,15 +61,12 @@
     </column>
     <index id="23" parent="6" name="idx_Comment_user">
       <ColNames>user</ColNames>
-      <ColumnCollations></ColumnCollations>
     </index>
     <index id="24" parent="6" name="idx_Comment_post">
       <ColNames>post</ColNames>
-      <ColumnCollations></ColumnCollations>
     </index>
     <index id="25" parent="6" name="idx_Comment_comment">
       <ColNames>comment</ColNames>
-      <ColumnCollations></ColumnCollations>
     </index>
     <key id="26" parent="6">
       <ColNames>id</ColNames>
@@ -113,15 +110,12 @@
     </column>
     <index id="34" parent="7" name="idx_CommentVote_comment">
       <ColNames>comment</ColNames>
-      <ColumnCollations></ColumnCollations>
     </index>
     <index id="35" parent="7" name="idx_CommentVote_user">
       <ColNames>user</ColNames>
-      <ColumnCollations></ColumnCollations>
     </index>
     <index id="36" parent="7" name="idx_CommentVote_vote_type">
       <ColNames>vote_type</ColNames>
-      <ColumnCollations></ColumnCollations>
     </index>
     <key id="37" parent="7">
       <ColNames>id</ColNames>
@@ -175,11 +169,9 @@
     </column>
     <index id="47" parent="8" name="idx_Post_user">
       <ColNames>user</ColNames>
-      <ColumnCollations></ColumnCollations>
     </index>
     <index id="48" parent="8" name="idx_Post_subjeddit">
       <ColNames>subjeddit</ColNames>
-      <ColumnCollations></ColumnCollations>
     </index>
     <key id="49" parent="8">
       <ColNames>id</ColNames>
@@ -218,15 +210,12 @@
     </column>
     <index id="56" parent="9" name="idx_PostVote_post">
       <ColNames>post</ColNames>
-      <ColumnCollations></ColumnCollations>
     </index>
     <index id="57" parent="9" name="idx_PostVote_user">
       <ColNames>user</ColNames>
-      <ColumnCollations></ColumnCollations>
     </index>
     <index id="58" parent="9" name="idx_PostVote_vote_type">
       <ColNames>vote_type</ColNames>
-      <ColumnCollations></ColumnCollations>
     </index>
     <key id="59" parent="9">
       <ColNames>id</ColNames>
@@ -290,11 +279,9 @@
     </column>
     <index id="71" parent="11" name="idx_Subscription_user">
       <ColNames>user</ColNames>
-      <ColumnCollations></ColumnCollations>
     </index>
     <index id="72" parent="11" name="idx_Subscription_subjeddit">
       <ColNames>subjeddit</ColNames>
-      <ColumnCollations></ColumnCollations>
     </index>
     <key id="73" parent="11">
       <ColNames>id</ColNames>

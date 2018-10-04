@@ -29,9 +29,6 @@ class UserInfoDTO(id: EntityID<Long>): LongEntity(id) {
 
 @RestController
 class UserInfoController {
-    @Value("\${jwt.header}")
-    lateinit var tokenHeader: String
-
     @Autowired
     lateinit var jwtTokenUtil: JwtTokenUtil
 
@@ -49,13 +46,7 @@ class UserInfoController {
 
     @GetMapping("/api/u/me/info")
     fun getMyInfo(request: HttpServletRequest): UserInfoPOJO? {
-        val authToken = request.getHeader(tokenHeader)
-
-        println("TOKEN " + authToken)
-
-        val token = authToken.substring(7)
-        val username = jwtTokenUtil.getUsernameFromToken(token)
-
+        val username = jwtTokenUtil.getUsernameFromRequest(request)
         return getUserInfo(username)
     }
 }

@@ -2,6 +2,9 @@ package com.jeddit.backend.controllers
 
 import com.jeddit.backend.authentification.security.JwtTokenUtil
 import com.jeddit.backend.models.*
+import com.jeddit.backend.repositories.PostVoteRepo
+import com.jeddit.backend.repositories.UserRepo
+import com.jeddit.backend.repositories.VoteTypeRepo
 import org.jetbrains.exposed.dao.EntityID
 import org.jetbrains.exposed.dao.LongEntity
 import org.jetbrains.exposed.dao.LongEntityClass
@@ -32,7 +35,7 @@ class FeedPostSubjedditDTO(id: EntityID<Long>): LongEntity(id) {
     fun toPOJO(): FeedPostSubjedditPOJO = FeedPostSubjedditPOJO(id.value, name, image)
 }
 
-data class FeedPostPOJO(val id: Long, val title: String, val text: String, val points: Int, val comments: Int, val subjeddit: FeedPostSubjedditPOJO, val poster: FeedPostUserPOJO)
+data class FeedPostPOJO(val id: Long, val title: String, val text: String, val points: Int, val vote: String, val comments: Int, val subjeddit: FeedPostSubjedditPOJO, val poster: FeedPostUserPOJO)
 class FeedPostDTO(id: EntityID<Long>): LongEntity(id) {
     companion object : LongEntityClass<FeedPostDTO>(Post)
 
@@ -40,12 +43,13 @@ class FeedPostDTO(id: EntityID<Long>): LongEntity(id) {
     var text by Post.text
 
     var points = 0
+    var vote = "NONE"
     var comments = 0
 
     var subjeddit by FeedPostSubjedditDTO referencedOn Post.subjeddit
     var poster by FeedPostUserDTO referencedOn Post.user
 
-    fun toPostPOJO(): FeedPostPOJO = FeedPostPOJO(id.value, title, text, points, comments, subjeddit.toPOJO(), poster.toPOJO())
+    fun toPostPOJO(): FeedPostPOJO = FeedPostPOJO(id.value, title, text, points, vote, comments, subjeddit.toPOJO(), poster.toPOJO())
 }
 
 
@@ -63,6 +67,7 @@ class UserController {
         val authToken = request.getHeader(tokenHeader)
         val token = authToken.substring(7)
         val username = jwtTokenUtil.getUsernameFromToken(token)
+        val userId = UserRepo.getIdByUsername(username)
 
         return transaction {
             val query = (Post leftJoin  User leftJoin Subjeddit leftJoin Subscription)
@@ -82,6 +87,12 @@ class UserController {
                 }.count()
 
                 it.points = upvotes - downvotes
+
+                val query = (PostVote leftJoin VoteType).slice(VoteType.name).select { (PostVote.user eq userId) and (PostVote.post eq it.id) }
+                if (query.count() > 0) {
+                    it.vote = query.map { it[VoteType.name] }[0]
+                }
+
                 it.comments = (Post leftJoin Comment).select { Comment.post eq it.id }.count()
 
                 it.toPostPOJO()

@@ -8,7 +8,6 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 import org.springframework.security.crypto.bcrypt.BCrypt
 
@@ -22,7 +21,7 @@ class ValidationStatus {
     }
 }
 
-data class registrationForm(val first_name: String, val last_name: String, val email: String, val username: String, val password: String, val confirmation_password: String)
+data class RegistrationForm(val first_name: String, val last_name: String, val email: String, val username: String, val password: String, val confirmation_password: String)
 data class RegistrationResponse(val success: Boolean, val token: String?)
 
 @RestController
@@ -65,7 +64,7 @@ class RegistrationController {
     private val jwtTokenUtil: JwtTokenUtil? = null
 
     @PostMapping("/api/registration/register")
-    fun register(@RequestBody registrationForm: registrationForm): RegistrationResponse {
+    fun register(@RequestBody registrationForm: RegistrationForm): RegistrationResponse {
         if ((validateName(registrationForm.first_name) == ValidationStatus.OK) &&
                 (validateName(registrationForm.last_name) == ValidationStatus.OK) &&
                 (validateEmail(registrationForm.email) == ValidationStatus.OK) &&
