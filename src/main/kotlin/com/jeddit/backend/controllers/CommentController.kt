@@ -119,18 +119,19 @@ class CommentController {
         }
     }
 
-    data class CommentRequestBody(val text: String)
+    data class CommentRequestBody(val text: String, val parent: Long? = null)
 
     @PostMapping("/api/post/{id}/comments")
-    fun comment(request: HttpServletRequest, @PathVariable id: Long, @RequestBody comment: CommentRequestBody) {
+    fun comment(request: HttpServletRequest, @PathVariable id: Long, @RequestBody commentJson: CommentRequestBody) {
         val username = jwtTokenUtil.getUsernameFromRequest(request) ?: return
         val userId = UserRepo.getIdByUsername(username)
 
         transaction {
             Comment.insert {
                 it[post] = EntityID(id, Post)
+                it[comment] = if (commentJson.parent != null) EntityID(commentJson.parent, Comment) else null
                 it[user] = EntityID(userId, User)
-                it[text] = comment.text
+                it[text] = commentJson.text
             }
         }
     }
