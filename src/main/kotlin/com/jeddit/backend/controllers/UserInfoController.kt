@@ -8,7 +8,6 @@ import org.jetbrains.exposed.dao.LongEntityClass
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RestController
@@ -32,7 +31,7 @@ class UserInfoController {
     @Autowired
     lateinit var jwtTokenUtil: JwtTokenUtil
 
-    @GetMapping("/api/u/{username}/info")
+    @GetMapping("/api/user/{username}/info")
     fun getUserInfo(@PathVariable username: String): UserInfoPOJO? {
         return transaction {
             val row = User.select { User.username eq username }.firstOrNull()
@@ -44,9 +43,9 @@ class UserInfoController {
         }
     }
 
-    @GetMapping("/api/u/me/info")
+    @GetMapping("/api/user/me/info")
     fun getMyInfo(request: HttpServletRequest): UserInfoPOJO? {
-        val username = jwtTokenUtil.getUsernameFromRequest(request)
+        val username = jwtTokenUtil.getUsernameFromRequest(request) ?: return null
         return getUserInfo(username)
     }
 }

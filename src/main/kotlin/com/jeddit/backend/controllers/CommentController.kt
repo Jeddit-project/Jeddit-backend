@@ -5,13 +5,11 @@ import com.jeddit.backend.models.*
 import com.jeddit.backend.repositories.UserRepo
 import org.jetbrains.exposed.dao.*
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.time.Instant
 import javax.servlet.http.HttpServletRequest
 
@@ -86,16 +84,16 @@ fun calculatePoints(comment: CommentDTO) {
     }
 }
 
-fun setVote(comment: CommentDTO, userId: Long) {
+fun setVote(comment: CommentDTO, username: String) {
     transaction {
-        val query = (CommentVote leftJoin VoteType).slice(VoteType.name).select { (CommentVote.user eq userId) and (CommentVote.comment eq comment.id) }
+        val query = (CommentVote leftJoin VoteType leftJoin User).slice(VoteType.name).select { (User.username eq username) and (CommentVote.comment eq comment.id) }
         if (query.count() > 0) {
             comment.vote = query.map { it[VoteType.name] }[0]
         }
     }
 
     comment.replies.forEach {
-        setVote(it, userId)
+        setVote(it, username)
     }
 }
 
@@ -105,9 +103,8 @@ class CommentController {
     lateinit var jwtTokenUtil: JwtTokenUtil
 
     @GetMapping("/api/post/{id}/comments")
-    fun comments(request: HttpServletRequest, @PathVariable id: Long): List<CommentPOJO> {
-        val username = jwtTokenUtil.getUsernameFromRequestNullable(request)
-        val userId = if (username != null) UserRepo.getIdByUsername(username) else null
+    fun getComments(request: HttpServletRequest, @PathVariable id: Long): List<CommentPOJO> {
+        val username = jwtTokenUtil.getUsernameFromRequest(request)
 
         return transaction {
             val topComments = getTopComments(id)
@@ -115,12 +112,26 @@ class CommentController {
             topComments.forEach {
                 populateReplies(it)
                 calculatePoints(it)
-                if (userId != null) {
-                    setVote(it, userId)
-                }
+                if (username != null) setVote(it, username)
             }
 
             topComments.map { it.toPOJO() }
+        }
+    }
+
+    data class CommentRequestBody(val text: String)
+
+    @PostMapping("/api/post/{id}/comments")
+    fun comment(request: HttpServletRequest, @PathVariable id: Long, @RequestBody comment: CommentRequestBody) {
+        val username = jwtTokenUtil.getUsernameFromRequest(request) ?: return
+        val userId = UserRepo.getIdByUsername(username)
+
+        transaction {
+            Comment.insert {
+                it[post] = EntityID(id, Post)
+                it[user] = EntityID(userId, User)
+                it[text] = comment.text
+            }
         }
     }
 }

@@ -6,7 +6,6 @@ import com.jeddit.backend.repositories.UserRepo
 import com.jeddit.backend.repositories.VoteTypeRepo
 import org.jetbrains.exposed.dao.EntityID
 import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PostMapping
@@ -25,21 +24,21 @@ class VoteController {
 
     @PostMapping("/api/vote/post")
     fun votePost(request: HttpServletRequest, @RequestBody vote: Vote) {
-        val username = jwtTokenUtil.getUsernameFromRequest(request)
-        val id = UserRepo.getIdByUsername(username)
+        val username = jwtTokenUtil.getUsernameFromRequest(request) ?: return
+        val userId = UserRepo.getIdByUsername(username)
 
         transaction {
             if (vote.vote_type == "NONE") {
-                PostVote.deleteWhere { (PostVote.user eq id) and (PostVote.post eq vote.id) }
+                PostVote.deleteWhere { (PostVote.user eq userId) and (PostVote.post eq vote.id) }
 
-            } else if (PostVote.select { (PostVote.user eq id) and (PostVote.post eq vote.id) }.count() > 0) {
-                PostVote.update({ (PostVote.user eq id) and (PostVote.post eq vote.id) }) {
+            } else if (PostVote.select { (PostVote.user eq userId) and (PostVote.post eq vote.id) }.count() > 0) {
+                PostVote.update({ (PostVote.user eq userId) and (PostVote.post eq vote.id) }) {
                     it[PostVote.vote_type] = EntityID(VoteTypeRepo.getIdByName(vote.vote_type), VoteType)
                 }
 
             } else {
                 PostVote.insert {
-                    it[user] = EntityID(id, User)
+                    it[user] = EntityID(userId, User)
                     it[post] = EntityID(vote.id, Post)
                     it[vote_type] = EntityID(VoteTypeRepo.getIdByName(vote.vote_type), VoteType)
                 }
@@ -49,21 +48,21 @@ class VoteController {
 
     @PostMapping("/api/vote/comment")
     fun voteComment(request: HttpServletRequest, @RequestBody vote: Vote) {
-        val username = jwtTokenUtil.getUsernameFromRequest(request)
-        val id = UserRepo.getIdByUsername(username)
+        val username = jwtTokenUtil.getUsernameFromRequest(request) ?: return
+        val userId = UserRepo.getIdByUsername(username)
 
         transaction {
             if (vote.vote_type == "NONE") {
-                CommentVote.deleteWhere { (CommentVote.user eq id) and (CommentVote.comment eq vote.id) }
+                CommentVote.deleteWhere { (CommentVote.user eq userId) and (CommentVote.comment eq vote.id) }
 
-            } else if (CommentVote.select { (CommentVote.user eq id) and (CommentVote.comment eq vote.id) }.count() > 0) {
-                CommentVote.update({ (CommentVote.user eq id) and (CommentVote.comment eq vote.id) }) {
+            } else if (CommentVote.select { (CommentVote.user eq userId) and (CommentVote.comment eq vote.id) }.count() > 0) {
+                CommentVote.update({ (CommentVote.user eq userId) and (CommentVote.comment eq vote.id) }) {
                     it[CommentVote.vote_type] = EntityID(VoteTypeRepo.getIdByName(vote.vote_type), VoteType)
                 }
 
             } else {
                 CommentVote.insert {
-                    it[user] = EntityID(id, User)
+                    it[user] = EntityID(userId, User)
                     it[comment] = EntityID(vote.id, Comment)
                     it[vote_type] = EntityID(VoteTypeRepo.getIdByName(vote.vote_type), VoteType)
                 }

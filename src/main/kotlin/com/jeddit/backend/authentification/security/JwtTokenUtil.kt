@@ -75,17 +75,14 @@ class JwtTokenUtil : Serializable {
 //    }
 
     // roscale
-    fun getUsernameFromRequest(request: HttpServletRequest): String {
-        val authToken = request.getHeader(tokenHeader)
-        val token = authToken.substring(7)
-        return getUsernameFromToken(token)
-    }
-
-    fun getUsernameFromRequestNullable(request: HttpServletRequest): String? {
+    fun getUsernameFromRequest(request: HttpServletRequest): String? {
         val authToken = request.getHeader(tokenHeader) ?: return null
         val token = authToken.substring(7)
         return getUsernameFromToken(token)
     }
+
+    fun userLoggedIn(request: HttpServletRequest): Boolean = request.getHeader(tokenHeader) != null
+
 
     fun generateToken(username: String): String {
         val claims = HashMap<String, Any>()

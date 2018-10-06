@@ -2,13 +2,12 @@ package com.jeddit.backend.controllers
 
 import com.jeddit.backend.authentification.security.JwtTokenUtil
 import com.jeddit.backend.models.*
-import com.jeddit.backend.repositories.PostVoteRepo
-import com.jeddit.backend.repositories.UserRepo
-import com.jeddit.backend.repositories.VoteTypeRepo
 import org.jetbrains.exposed.dao.EntityID
 import org.jetbrains.exposed.dao.LongEntity
 import org.jetbrains.exposed.dao.LongEntityClass
+import org.jetbrains.exposed.sql.JoinType
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.leftJoin
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.beans.factory.annotation.Autowired
@@ -63,45 +62,46 @@ class UserController {
     lateinit var jwtTokenUtil: JwtTokenUtil
 
     @GetMapping("/api/feed")
-    fun getFeed(request: HttpServletRequest): List<FeedPostPOJO> {
-        val authToken = request.getHeader(tokenHeader)
-        val token = authToken.substring(7)
-        val username = jwtTokenUtil.getUsernameFromToken(token)
-        val userId = UserRepo.getIdByUsername(username)
+    fun getFeed(request: HttpServletRequest): List<FeedPostPOJO>? {
+        val username = jwtTokenUtil.getUsernameFromRequest(request) ?: return null
+
+        println("WORKS HERE")
 
         return transaction {
-            val query = (Post leftJoin  User leftJoin Subjeddit leftJoin Subscription)
-                    .select {
-                        (User.username eq username)
-                    }
+//            val query = (Post leftJoin User leftJoin Subjeddit leftJoin Subscription)
+//                    .select { (User.username eq username) }
+
+            val query = (Post leftJoin Subjeddit).join(Subscription, JoinType.LEFT, additionalConstraint = {Post.subjeddit eq Subscription.subjeddit})
+                    .join(User, JoinType.LEFT, additionalConstraint = {Subscription.user eq User.id})
+                    .select { (User.username eq username) }
 
             // Return
             FeedPostDTO.wrapRows(query).toList().map {
 
-                val upvotes = (Post leftJoin PostVote leftJoin VoteType).select {
-                    (PostVote.post eq it.id) and (VoteType.name eq "UPVOTE")
-                }.count()
+                val upvotes = (Post leftJoin PostVote leftJoin VoteType)
+                        .select { (PostVote.post eq it.id) and (VoteType.name eq "UPVOTE") }
+                        .count()
 
-                val downvotes = (Post leftJoin PostVote leftJoin VoteType).select {
-                    (PostVote.post eq it.id) and (VoteType.name eq "DOWNVOTE")
-                }.count()
+                val downvotes = (Post leftJoin PostVote leftJoin VoteType)
+                        .select { (PostVote.post eq it.id) and (VoteType.name eq "DOWNVOTE") }
+                        .count()
 
                 it.points = upvotes - downvotes
 
-                val query = (PostVote leftJoin VoteType).slice(VoteType.name).select { (PostVote.user eq userId) and (PostVote.post eq it.id) }
+                val query = (PostVote leftJoin VoteType leftJoin User)
+                        .slice(VoteType.name)
+                        .select { (User.username eq username) and (PostVote.post eq it.id) }
+
                 if (query.count() > 0) {
                     it.vote = query.map { it[VoteType.name] }[0]
                 }
 
-                it.comments = (Post leftJoin Comment).select { Comment.post eq it.id }.count()
+                it.comments = (Post leftJoin Comment)
+                        .select { Comment.post eq it.id }
+                        .count()
 
                 it.toPostPOJO()
             }
         }
-    }
-
-    @PostMapping("/add")
-    fun add(@RequestBody user: User): String {
-        return "Saved"
     }
 }

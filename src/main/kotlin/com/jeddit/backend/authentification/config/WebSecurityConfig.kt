@@ -83,7 +83,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                         "/auth/**",
                         "/api/post/*/comments",
                         "/api/subjeddit/*/info",
-                        "/api/u/*/info",
+                        "/api/user/*/info",
                         "/api/registration/**").permitAll()
                 .anyRequest().authenticated()
 
