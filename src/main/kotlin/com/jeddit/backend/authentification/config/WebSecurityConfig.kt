@@ -82,6 +82,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                 .antMatchers(
                         "/auth/**",
                         "/api/post/*/comments",
+                        "/api/post/**",
                         "/api/subjeddit/*/info",
                         "/api/user/*/info",
                         "/api/registration/**").permitAll()
