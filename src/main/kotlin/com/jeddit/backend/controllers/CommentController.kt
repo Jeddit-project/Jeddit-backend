@@ -55,7 +55,8 @@ class CommentDTO(id: EntityID<Long>): LongEntity(id) {
 
 fun getTopComments(id: Long): List<CommentDTO> {
     return transaction {
-        val query = (Comment leftJoin Post).select { Post.id eq id and Comment.comment.isNull() }
+        val query = (Comment leftJoin Post)
+                .select { Post.id eq id and Comment.comment.isNull() }
         CommentDTO.wrapRows(query).toList()
     }
 }
