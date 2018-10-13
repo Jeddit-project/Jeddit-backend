@@ -97,7 +97,7 @@ class UserController {
     lateinit var jwtTokenUtil: JwtTokenUtil
 
     @GetMapping("/api/feed")
-    fun getFeed(request: HttpServletRequest): List<FeedPostPOJO>? {
+    fun getFeed(request: HttpServletRequest, @RequestParam(defaultValue = "0") offset: Int): List<FeedPostPOJO>? {
         val username = jwtTokenUtil.getUsernameFromRequest(request) ?: return null
 
         return transaction {
@@ -105,6 +105,7 @@ class UserController {
             val query = (Post leftJoin Subjeddit).join(Subscription, JoinType.LEFT, additionalConstraint = {Post.subjeddit eq Subscription.subjeddit})
                     .join(User, JoinType.LEFT, additionalConstraint = {Subscription.user eq User.id})
                     .select { (User.username eq username) }
+                    .limit(20, offset)
 
             // Return
             FeedPostDTO.wrapRows(query).toList().map {
