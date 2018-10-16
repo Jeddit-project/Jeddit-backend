@@ -10,8 +10,9 @@ object Comment: LongIdTable() {
     val updated_at = long("updated_at").nullable()
 
     val text = text("text")
+    val points = integer("points")
 
     val user = reference("user", User)
     val post = reference("post", Post)
-    val comment = reference("comment", Comment).nullable()
+    val parent = reference("parent", Comment).nullable()
 }

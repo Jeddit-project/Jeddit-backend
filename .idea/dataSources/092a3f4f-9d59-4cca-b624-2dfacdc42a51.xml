@@ -25,380 +25,437 @@
     <table id="15" parent="2" name="sqlite_sequence">
       <System>1</System>
     </table>
-    <column id="16" parent="6" name="id">
+    <trigger id="16" parent="6" name="onInsertPostComments">
+      <SourceTextLength>192</SourceTextLength>
+      <Turn>after-row</Turn>
+      <Events>I</Events>
+    </trigger>
+    <trigger id="17" parent="6" name="onDeletePostComments">
+      <SourceTextLength>192</SourceTextLength>
+      <Turn>after-row</Turn>
+      <Events>D</Events>
+    </trigger>
+    <column id="18" parent="6" name="id">
       <Position>1</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
-    <column id="17" parent="6" name="text">
+    <column id="19" parent="6" name="text">
       <Position>2</Position>
       <DataType>text|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="18" parent="6" name="user">
+    <column id="20" parent="6" name="user">
       <Position>3</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="19" parent="6" name="post">
+    <column id="21" parent="6" name="post">
       <Position>4</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="20" parent="6" name="comment">
+    <column id="22" parent="6" name="parent">
       <Position>5</Position>
       <DataType>integer|0s</DataType>
       <DefaultExpression>NULL</DefaultExpression>
     </column>
-    <column id="21" parent="6" name="created_at">
+    <column id="23" parent="6" name="created_at">
       <Position>6</Position>
       <DataType>integer|0s</DataType>
     </column>
-    <column id="22" parent="6" name="updated_at">
+    <column id="24" parent="6" name="updated_at">
       <Position>7</Position>
       <DataType>integer|0s</DataType>
     </column>
-    <index id="23" parent="6" name="idx_Comment_user">
+    <column id="25" parent="6" name="points">
+      <Position>8</Position>
+      <DataType>int|0s</DataType>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <index id="26" parent="6" name="idx_Comment_user">
       <ColNames>user</ColNames>
       <ColumnCollations></ColumnCollations>
     </index>
-    <index id="24" parent="6" name="idx_Comment_post">
+    <index id="27" parent="6" name="idx_Comment_post">
       <ColNames>post</ColNames>
       <ColumnCollations></ColumnCollations>
     </index>
-    <index id="25" parent="6" name="idx_Comment_comment">
-      <ColNames>comment</ColNames>
+    <index id="28" parent="6" name="idx_Comment_comment">
+      <ColNames>parent</ColNames>
       <ColumnCollations></ColumnCollations>
     </index>
-    <key id="26" parent="6">
+    <key id="29" parent="6">
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="27" parent="6" name="Comment_ibfk_1">
+    <foreign-key id="30" parent="6" name="Comment_ibfk_1">
       <ColNames>user</ColNames>
       <RefTableName>User</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="28" parent="6" name="Comment_ibfk_2">
+    <foreign-key id="31" parent="6" name="Comment_ibfk_2">
       <ColNames>post</ColNames>
       <RefTableName>Post</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="29" parent="6" name="Comment_ibfk_3">
-      <ColNames>comment</ColNames>
+    <foreign-key id="32" parent="6" name="Comment_ibfk_3">
+      <ColNames>parent</ColNames>
       <RefTableName>Commenta8dc</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="30" parent="7" name="id">
+    <trigger id="33" parent="7" name="onInsertCommentPoints">
+      <SourceTextLength>522</SourceTextLength>
+      <Turn>after-row</Turn>
+      <Events>I</Events>
+    </trigger>
+    <trigger id="34" parent="7" name="onUpdateCommentPoints">
+      <SourceTextLength>535</SourceTextLength>
+      <Turn>after-row</Turn>
+      <Events>U</Events>
+      <ColNames>vote_type</ColNames>
+    </trigger>
+    <trigger id="35" parent="7" name="onDeleteCommentPoints">
+      <SourceTextLength>522</SourceTextLength>
+      <Turn>after-row</Turn>
+      <Events>D</Events>
+    </trigger>
+    <column id="36" parent="7" name="id">
       <Position>1</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
-    <column id="31" parent="7" name="comment">
+    <column id="37" parent="7" name="comment">
       <Position>2</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="32" parent="7" name="user">
+    <column id="38" parent="7" name="user">
       <Position>3</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="33" parent="7" name="vote_type">
+    <column id="39" parent="7" name="vote_type">
       <Position>4</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="34" parent="7" name="idx_CommentVote_comment">
+    <index id="40" parent="7" name="idx_CommentVote_comment">
       <ColNames>comment</ColNames>
       <ColumnCollations></ColumnCollations>
     </index>
-    <index id="35" parent="7" name="idx_CommentVote_user">
+    <index id="41" parent="7" name="idx_CommentVote_user">
       <ColNames>user</ColNames>
       <ColumnCollations></ColumnCollations>
     </index>
-    <index id="36" parent="7" name="idx_CommentVote_vote_type">
+    <index id="42" parent="7" name="idx_CommentVote_vote_type">
       <ColNames>vote_type</ColNames>
       <ColumnCollations></ColumnCollations>
     </index>
-    <key id="37" parent="7">
+    <key id="43" parent="7">
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="38" parent="7" name="CommentVote_ibfk_1">
+    <foreign-key id="44" parent="7" name="CommentVote_ibfk_1">
       <ColNames>comment</ColNames>
       <RefTableName>Comment</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="39" parent="7" name="CommentVote_ibfk_2">
+    <foreign-key id="45" parent="7" name="CommentVote_ibfk_2">
       <ColNames>user</ColNames>
       <RefTableName>User</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="40" parent="7" name="CommentVote_ibfk_3">
+    <foreign-key id="46" parent="7" name="CommentVote_ibfk_3">
       <ColNames>vote_type</ColNames>
       <RefTableName>VoteType</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="41" parent="8" name="id">
+    <column id="47" parent="8" name="id">
       <Position>1</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
-    <column id="42" parent="8" name="title">
+    <column id="48" parent="8" name="title">
       <Position>2</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="43" parent="8" name="text">
+    <column id="49" parent="8" name="text">
       <Position>3</Position>
       <DataType>text|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="44" parent="8" name="image">
+    <column id="50" parent="8" name="image">
       <Position>4</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="45" parent="8" name="user">
+    <column id="51" parent="8" name="user">
       <Position>5</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="46" parent="8" name="subjeddit">
+    <column id="52" parent="8" name="subjeddit">
       <Position>6</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="47" parent="8" name="random_id">
+    <column id="53" parent="8" name="random_id">
       <Position>7</Position>
       <DataType>varchar(255)|0s</DataType>
     </column>
-    <column id="48" parent="8" name="title_id">
+    <column id="54" parent="8" name="title_id">
       <Position>8</Position>
       <DataType>varchar(255)|0s</DataType>
     </column>
-    <column id="49" parent="8" name="created_at">
+    <column id="55" parent="8" name="created_at">
       <Position>9</Position>
       <DataType>integer|0s</DataType>
     </column>
-    <column id="50" parent="8" name="updated_at">
+    <column id="56" parent="8" name="updated_at">
       <Position>10</Position>
       <DataType>integer|0s</DataType>
     </column>
-    <index id="51" parent="8" name="idx_Post_user">
+    <column id="57" parent="8" name="points">
+      <Position>11</Position>
+      <DataType>int|0s</DataType>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <column id="58" parent="8" name="comments">
+      <Position>12</Position>
+      <DataType>int|0s</DataType>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <index id="59" parent="8" name="idx_Post_user">
       <ColNames>user</ColNames>
       <ColumnCollations></ColumnCollations>
     </index>
-    <index id="52" parent="8" name="idx_Post_subjeddit">
+    <index id="60" parent="8" name="idx_Post_subjeddit">
       <ColNames>subjeddit</ColNames>
       <ColumnCollations></ColumnCollations>
     </index>
-    <key id="53" parent="8">
+    <key id="61" parent="8">
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="54" parent="8" name="Post_ibfk_1">
+    <foreign-key id="62" parent="8" name="Post_ibfk_1">
       <ColNames>user</ColNames>
       <RefTableName>User</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="55" parent="8" name="Post_ibfk_2">
+    <foreign-key id="63" parent="8" name="Post_ibfk_2">
       <ColNames>subjeddit</ColNames>
       <RefTableName>Subjeddit</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="56" parent="9" name="id">
+    <trigger id="64" parent="9" name="onInsertPostPoints">
+      <SourceTextLength>471</SourceTextLength>
+      <Turn>after-row</Turn>
+      <Events>I</Events>
+    </trigger>
+    <trigger id="65" parent="9" name="onUpdatePostPoints">
+      <SourceTextLength>484</SourceTextLength>
+      <Turn>after-row</Turn>
+      <Events>U</Events>
+      <ColNames>vote_type</ColNames>
+    </trigger>
+    <trigger id="66" parent="9" name="onDeletePostPoints">
+      <SourceTextLength>471</SourceTextLength>
+      <Turn>after-row</Turn>
+      <Events>D</Events>
+    </trigger>
+    <column id="67" parent="9" name="id">
       <Position>1</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
-    <column id="57" parent="9" name="post">
+    <column id="68" parent="9" name="post">
       <Position>2</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="58" parent="9" name="user">
+    <column id="69" parent="9" name="user">
       <Position>3</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="59" parent="9" name="vote_type">
+    <column id="70" parent="9" name="vote_type">
       <Position>4</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="60" parent="9" name="idx_PostVote_post">
+    <index id="71" parent="9" name="idx_PostVote_post">
       <ColNames>post</ColNames>
       <ColumnCollations></ColumnCollations>
     </index>
-    <index id="61" parent="9" name="idx_PostVote_user">
+    <index id="72" parent="9" name="idx_PostVote_user">
       <ColNames>user</ColNames>
       <ColumnCollations></ColumnCollations>
     </index>
-    <index id="62" parent="9" name="idx_PostVote_vote_type">
+    <index id="73" parent="9" name="idx_PostVote_vote_type">
       <ColNames>vote_type</ColNames>
       <ColumnCollations></ColumnCollations>
     </index>
-    <key id="63" parent="9">
+    <key id="74" parent="9">
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="64" parent="9" name="PostVote_ibfk_1">
+    <foreign-key id="75" parent="9" name="PostVote_ibfk_1">
       <ColNames>post</ColNames>
       <RefTableName>Post</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="65" parent="9" name="PostVote_ibfk_2">
+    <foreign-key id="76" parent="9" name="PostVote_ibfk_2">
       <ColNames>user</ColNames>
       <RefTableName>User</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="66" parent="9" name="PostVote_ibfk_3">
+    <foreign-key id="77" parent="9" name="PostVote_ibfk_3">
       <ColNames>vote_type</ColNames>
       <RefTableName>VoteType</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="67" parent="10" name="id">
+    <column id="78" parent="10" name="id">
       <Position>1</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
-    <column id="68" parent="10" name="name">
+    <column id="79" parent="10" name="name">
       <Position>2</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="69" parent="10" name="image">
+    <column id="80" parent="10" name="image">
       <Position>3</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="70" parent="10" name="description">
+    <column id="81" parent="10" name="description">
       <Position>4</Position>
       <DataType>text|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <key id="71" parent="10">
+    <key id="82" parent="10">
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="72" parent="11" name="id">
+    <column id="83" parent="11" name="id">
       <Position>1</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
-    <column id="73" parent="11" name="user">
+    <column id="84" parent="11" name="user">
       <Position>2</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="74" parent="11" name="subjeddit">
+    <column id="85" parent="11" name="subjeddit">
       <Position>3</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="75" parent="11" name="idx_Subscription_user">
+    <index id="86" parent="11" name="idx_Subscription_user">
       <ColNames>user</ColNames>
       <ColumnCollations></ColumnCollations>
     </index>
-    <index id="76" parent="11" name="idx_Subscription_subjeddit">
+    <index id="87" parent="11" name="idx_Subscription_subjeddit">
       <ColNames>subjeddit</ColNames>
       <ColumnCollations></ColumnCollations>
     </index>
-    <key id="77" parent="11">
+    <key id="88" parent="11">
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="78" parent="11" name="Subscription_ibfk_1">
+    <foreign-key id="89" parent="11" name="Subscription_ibfk_1">
       <ColNames>user</ColNames>
       <RefTableName>User</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="79" parent="11" name="Subscription_ibfk_2">
+    <foreign-key id="90" parent="11" name="Subscription_ibfk_2">
       <ColNames>subjeddit</ColNames>
       <RefTableName>Subjeddit</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="80" parent="12" name="id">
+    <column id="91" parent="12" name="id">
       <Position>1</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
-    <column id="81" parent="12" name="first_name">
+    <column id="92" parent="12" name="first_name">
       <Position>2</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="82" parent="12" name="last_name">
+    <column id="93" parent="12" name="last_name">
       <Position>3</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="83" parent="12" name="username">
+    <column id="94" parent="12" name="username">
       <Position>4</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="84" parent="12" name="password_hash">
+    <column id="95" parent="12" name="password_hash">
       <Position>5</Position>
       <DataType>varchar(64)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="85" parent="12" name="email">
+    <column id="96" parent="12" name="email">
       <Position>6</Position>
       <DataType>varchar(255)|0s</DataType>
     </column>
-    <key id="86" parent="12">
+    <key id="97" parent="12">
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="87" parent="13" name="id">
+    <column id="98" parent="13" name="id">
       <Position>1</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
-    <column id="88" parent="13" name="name">
+    <column id="99" parent="13" name="name">
       <Position>2</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <key id="89" parent="13">
+    <key id="100" parent="13">
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="90" parent="14" name="type">
+    <column id="101" parent="14" name="type">
       <Position>1</Position>
       <DataType>text|0s</DataType>
     </column>
-    <column id="91" parent="14" name="name">
+    <column id="102" parent="14" name="name">
       <Position>2</Position>
       <DataType>text|0s</DataType>
     </column>
-    <column id="92" parent="14" name="tbl_name">
+    <column id="103" parent="14" name="tbl_name">
       <Position>3</Position>
       <DataType>text|0s</DataType>
     </column>
-    <column id="93" parent="14" name="rootpage">
+    <column id="104" parent="14" name="rootpage">
       <Position>4</Position>
       <DataType>integer|0s</DataType>
     </column>
-    <column id="94" parent="14" name="sql">
+    <column id="105" parent="14" name="sql">
       <Position>5</Position>
       <DataType>text|0s</DataType>
     </column>
-    <column id="95" parent="15" name="name">
+    <column id="106" parent="15" name="name">
       <Position>1</Position>
     </column>
-    <column id="96" parent="15" name="seq">
+    <column id="107" parent="15" name="seq">
       <Position>2</Position>
     </column>
   </database-model>

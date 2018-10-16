@@ -31,7 +31,7 @@ class CommentDTO(id: EntityID<Long>): LongEntity(id) {
     var updated_at by Comment.updated_at
 
     var text by Comment.text
-    var points: Int = 0
+    var points by Comment.points
     var vote = "NONE"
 
     var user by CommentUserDTO referencedOn Comment.user
@@ -56,32 +56,19 @@ class CommentDTO(id: EntityID<Long>): LongEntity(id) {
 fun getTopComments(id: Long): List<CommentDTO> {
     return transaction {
         val query = (Comment leftJoin Post)
-                .select { Post.id eq id and Comment.comment.isNull() }
+                .select { Post.id eq id and Comment.parent.isNull() }
         CommentDTO.wrapRows(query).toList()
     }
 }
 
 fun populateReplies(comment: CommentDTO) {
     comment.replies = transaction {
-        val query = Comment.select { Comment.comment eq comment.id }
+        val query = Comment.select { Comment.parent eq comment.id }
         CommentDTO.wrapRows(query).toList()
     }
 
     comment.replies.forEach {
         populateReplies(it)
-    }
-}
-
-fun calculatePoints(comment: CommentDTO) {
-    comment.points = transaction {
-        val upvotes = (CommentVote leftJoin VoteType).select { (CommentVote.comment eq comment.id) and (VoteType.name eq "UPVOTE") }.count()
-        val downvotes = (CommentVote leftJoin VoteType).select { (CommentVote.comment eq comment.id) and (VoteType.name eq "DOWNVOTE") }.count()
-
-        upvotes - downvotes
-    }
-
-    comment.replies.forEach {
-        calculatePoints(it)
     }
 }
 
@@ -112,7 +99,6 @@ class CommentController {
 
             topComments.forEach {
                 populateReplies(it)
-                calculatePoints(it)
                 if (username != null) setVote(it, username)
             }
 
@@ -130,7 +116,7 @@ class CommentController {
         transaction {
             Comment.insert {
                 it[post] = EntityID(id, Post)
-                it[comment] = if (commentJson.parent != null) EntityID(commentJson.parent, Comment) else null
+                it[parent] = if (commentJson.parent != null) EntityID(commentJson.parent, Comment) else null
                 it[user] = EntityID(userId, User)
                 it[text] = commentJson.text
             }

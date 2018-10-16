@@ -47,9 +47,9 @@ class FeedPostDTO(id: EntityID<Long>): LongEntity(id) {
     var title by Post.title
     var text by Post.text
 
-    var points = 0
+    var points by Post.points
     var vote = "NONE"
-    var comments = 0
+    var comments by Post.comments
 
     var subjeddit by FeedPostSubjedditDTO referencedOn Post.subjeddit
     var poster by FeedPostUserDTO referencedOn Post.user
@@ -59,16 +59,6 @@ class FeedPostDTO(id: EntityID<Long>): LongEntity(id) {
 
 
 fun fillPost(it: FeedPostDTO, username: String?): FeedPostDTO {
-    val upvotes = (Post leftJoin PostVote leftJoin VoteType)
-            .select { (PostVote.post eq it.id) and (VoteType.name eq "UPVOTE") }
-            .count()
-
-    val downvotes = (Post leftJoin PostVote leftJoin VoteType)
-            .select { (PostVote.post eq it.id) and (VoteType.name eq "DOWNVOTE") }
-            .count()
-
-    it.points = upvotes - downvotes
-
     if (username != null) {
         val query = (PostVote leftJoin VoteType leftJoin User)
                 .slice(VoteType.name)
@@ -78,10 +68,6 @@ fun fillPost(it: FeedPostDTO, username: String?): FeedPostDTO {
             it.vote = query.map { it[VoteType.name] }[0]
         }
     }
-
-    it.comments = (Post leftJoin Comment)
-            .select { Comment.post eq it.id }
-            .count()
 
     return it
 }
@@ -97,7 +83,9 @@ class UserController {
     lateinit var jwtTokenUtil: JwtTokenUtil
 
     @GetMapping("/api/feed")
-    fun getFeed(request: HttpServletRequest, @RequestParam(defaultValue = "0") offset: Int): List<FeedPostPOJO>? {
+    fun getFeed(request: HttpServletRequest, @RequestParam(defaultValue = "top") sort_by: String, @RequestParam(defaultValue = "0") offset: Int): List<FeedPostPOJO>? {
+        println(sort_by)
+
         val username = jwtTokenUtil.getUsernameFromRequest(request) ?: return null
 
         return transaction {
@@ -105,6 +93,11 @@ class UserController {
             val query = (Post leftJoin Subjeddit).join(Subscription, JoinType.LEFT, additionalConstraint = {Post.subjeddit eq Subscription.subjeddit})
                     .join(User, JoinType.LEFT, additionalConstraint = {Subscription.user eq User.id})
                     .select { (User.username eq username) }
+                    .orderBy(when (sort_by) {
+                        "top" -> Pair(Post.points, false)
+                        "new" -> Pair(Post.created_at, false)
+                        else -> Pair(Post.points, false)
+                    })
                     .limit(20, offset)
 
             // Return

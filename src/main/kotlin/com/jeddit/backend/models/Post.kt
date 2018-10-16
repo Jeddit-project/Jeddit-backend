@@ -15,6 +15,8 @@ object Post: LongIdTable() {
     val title = varchar("title", 255)
     val text = text("text")
     val image = varchar("image", 255)
+    val points = integer("points")
+    val comments = integer("comments")
 
     val user = reference("user", User)
     val subjeddit = reference("subjeddit", Subjeddit)
