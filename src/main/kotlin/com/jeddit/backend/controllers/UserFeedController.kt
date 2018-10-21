@@ -74,7 +74,7 @@ fun fillPost(it: FeedPostDTO, username: String?): FeedPostDTO {
 
 
 @RestController
-class UserController {
+class UserFeedController {
 
     @Value("\${jwt.header}")
     lateinit var tokenHeader: String
@@ -84,8 +84,6 @@ class UserController {
 
     @GetMapping("/api/feed")
     fun getFeed(request: HttpServletRequest, @RequestParam(defaultValue = "top") sort_by: String, @RequestParam(defaultValue = "0") offset: Int): List<FeedPostPOJO>? {
-        println(sort_by)
-
         val username = jwtTokenUtil.getUsernameFromRequest(request) ?: return null
 
         return transaction {

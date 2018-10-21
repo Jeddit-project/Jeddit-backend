@@ -49,7 +49,12 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.boot:spring-boot-starter-security')
 	compile('mysql:mysql-connector-java')
-	compile('io.jsonwebtoken:jjwt:0.9.1')
+	
+	compile 'io.jsonwebtoken:jjwt-api:0.10.5'
+	runtime 'io.jsonwebtoken:jjwt-impl:0.10.5',
+			// Uncomment the next line if you want to use RSASSA-PSS (PS256, PS384, PS512) algorithms:
+			//'org.bouncycastle:bcprov-jdk15on:1.60',
+			'io.jsonwebtoken:jjwt-jackson:0.10.5'
 
 	compile('org.jetbrains.exposed:exposed:0.10.5')
 //	compile "mysql:mysql-connector-java:5.1.46"

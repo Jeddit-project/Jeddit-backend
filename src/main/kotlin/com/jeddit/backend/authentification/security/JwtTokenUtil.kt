@@ -6,7 +6,7 @@ import com.jeddit.backend.models.User
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
-import io.jsonwebtoken.impl.DefaultClock
+import io.jsonwebtoken.security.Keys
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.beans.factory.annotation.Value
@@ -15,21 +15,25 @@ import org.springframework.stereotype.Component
 import java.io.Serializable
 import java.util.*
 import java.util.function.Function
+import javax.crypto.SecretKey
 import javax.servlet.http.HttpServletRequest
 
 @Component
 class JwtTokenUtil : Serializable {
     //    @SuppressFBWarnings(value = "SE_BAD_FIELD", justification = "It's okay here")
-    private val clock = DefaultClock.INSTANCE
 
+    private lateinit var key: SecretKey
     @Value("\${jwt.secret}")
-    private val secret: String? = null
+    fun setKey(value: String) {
+        key = Keys.hmacShaKeyFor(Base64.getDecoder().decode(value))
+    }
 
     @Value("\${jwt.expiration}")
     private val expiration: Long? = null
 
     @Value("\${jwt.header}")
     lateinit var tokenHeader: String
+
 
     fun getUsernameFromToken(token: String): String {
         return getClaimFromToken(token, Function { it.subject })
@@ -50,14 +54,14 @@ class JwtTokenUtil : Serializable {
 
     private fun getAllClaimsFromToken(token: String): Claims {
         return Jwts.parser()
-                .setSigningKey(secret)
+                .setSigningKey(key)
                 .parseClaimsJws(token)
                 .body
     }
 
     private fun isTokenExpired(token: String): Boolean {
         val expiration = getExpirationDateFromToken(token)
-        return expiration.before(clock.now())
+        return expiration.before(Date())
     }
 
     private fun isCreatedBeforeLastPasswordReset(created: Date, lastPasswordReset: Date?): Boolean {
@@ -96,7 +100,7 @@ class JwtTokenUtil : Serializable {
     }
 
     private fun doGenerateToken(claims: Map<String, Any>, subject: String): String {
-        val createdDate = clock.now()
+        val createdDate = Date()
         val expirationDate = calculateExpirationDate(createdDate)
 
         return Jwts.builder()
@@ -104,7 +108,7 @@ class JwtTokenUtil : Serializable {
                 .setSubject(subject)
                 .setIssuedAt(createdDate)
                 .setExpiration(expirationDate)
-                .signWith(SignatureAlgorithm.HS512, secret)
+                .signWith(key, SignatureAlgorithm.HS512)
                 .compact()
     }
 
@@ -114,7 +118,7 @@ class JwtTokenUtil : Serializable {
     }
 
     fun refreshToken(token: String): String {
-        val createdDate = clock.now()
+        val createdDate = Date()
         val expirationDate = calculateExpirationDate(createdDate)
 
         val claims = getAllClaimsFromToken(token)
@@ -123,7 +127,7 @@ class JwtTokenUtil : Serializable {
 
         return Jwts.builder()
                 .setClaims(claims)
-                .signWith(SignatureAlgorithm.HS512, secret)
+                .signWith(key, SignatureAlgorithm.HS512)
                 .compact()
     }
 

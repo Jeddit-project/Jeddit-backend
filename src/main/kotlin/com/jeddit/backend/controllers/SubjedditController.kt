@@ -63,11 +63,19 @@ class SubjedditController {
     }
 
     @GetMapping("/api/subjeddit/{name}/posts")
-    fun getPosts(request: HttpServletRequest, @PathVariable name: String, @RequestParam(defaultValue = "0") offset: Int): List<FeedPostPOJO> {
+    fun getPosts(request: HttpServletRequest,  @PathVariable name: String, @RequestParam(defaultValue = "top") sort_by: String, @RequestParam(defaultValue = "0") offset: Int): List<FeedPostPOJO> {
         val username = jwtTokenUtil.getUsernameFromRequest(request)
 
         return transaction {
-            val query = (Post leftJoin Subjeddit).select { Subjeddit.name eq name }.limit(20, offset)
+            val query = (Post leftJoin Subjeddit)
+                    .select { Subjeddit.name eq name }
+                    .orderBy(when (sort_by) {
+                        "top" -> Pair(Post.points, false)
+                        "new" -> Pair(Post.created_at, false)
+                        else -> Pair(Post.points, false)
+                    })
+                    .limit(20, offset)
+
             FeedPostDTO.wrapRows(query).toList().map {
                 fillPost(it, username)
                 it.toPostPOJO()
