@@ -14,5 +14,5 @@ object Comment: LongIdTable() {
 
     val user = reference("user", User)
     val post = reference("post", Post)
-    val parent = reference("parent", Comment).nullable()
+    val parent = reference("parent_comment_id", Comment).nullable()
 }

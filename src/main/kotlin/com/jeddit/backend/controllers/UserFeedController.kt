@@ -7,7 +7,6 @@ import org.jetbrains.exposed.dao.LongEntity
 import org.jetbrains.exposed.dao.LongEntityClass
 import org.jetbrains.exposed.sql.JoinType
 import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.leftJoin
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.beans.factory.annotation.Autowired
@@ -106,13 +105,13 @@ class UserFeedController {
         }
     }
 
-    @GetMapping("api/post/{subjeddit}/{random_id}/{title_id}")
-    fun getPost(request: HttpServletRequest, @PathVariable subjeddit: String, @PathVariable random_id: String, @PathVariable title_id: String): FeedPostPOJO? {
+    @GetMapping("api/post/{subjeddit_name}/{random_id}/{title_id}")
+    fun getPost(request: HttpServletRequest, @PathVariable subjeddit_name: String, @PathVariable random_id: String, @PathVariable title_id: String): FeedPostPOJO? {
         val username = jwtTokenUtil.getUsernameFromRequest(request)
 
         return transaction { try {
             val query = (Post leftJoin Subjeddit leftJoin User)
-                    .select { (Subjeddit.name eq subjeddit) and (Post.random_id eq random_id) and (Post.title_id eq title_id) }
+                    .select { (Subjeddit.name eq subjeddit_name) and (Post.random_id eq random_id) and (Post.title_id eq title_id) }
                     .first()
 
             fillPost(FeedPostDTO.wrapRow(query), username).toPostPOJO()

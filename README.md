@@ -24,23 +24,26 @@
 
 <tr>
 	<td>GET</td>
-	<td>/api/registration/validate_name?name=`value`</td>
+	<td>/api/registration/validate_name?name={value}</td>
 	<td></td>
 	<td><pre>"OK|INVALID|ALREADY_USED"</pre></td>
+	<td>No</td>
 </tr>
 
 <tr>
 	<td>GET</td>
-	<td>/api/registration/validate_email?email=`value`</td>
+	<td>/api/registration/validate_email?email={value}</td>
 	<td></td>
 	<td><pre>"OK|INVALID|ALREADY_USED"</pre></td>
+	<td>No</td>
 </tr>
 
 <tr>
 	<td>GET</td>
-	<td>/api/registration/validate_username?username=`value`</td>
+	<td>/api/registration/validate_username?username={value}</td>
 	<td></td>
 	<td><pre>"OK|INVALID|ALREADY_USED"</pre></td>
+	<td>No</td>
 </tr>
 
 <tr>
@@ -58,64 +61,272 @@
 	"success": boolean,
 	"token": string?
 }</pre></td>
+    <td>No</td>
 </tr>
 
 <tr>
 	<td>GET</td>
-	<td>/api/feed</td>
+	<td>/api/feed?sort_by={top|new}&offset={number}</td>
 	<td></td>
 	<td><pre>[
-             	{
-             		"id": number,
-             		"created_at": number,
-             		"updated_at": number?,
-             		"random_id": string,
-             		"title_id": string,
-             		"title": string,
-             		"text": string,
-             		"points": number,
-             		"vote": "UPVOTE|DOWNVOTE|null",
-             		"comments": number,
-             		"subjeddit": {
-             		}
-             	}
-             ]</pre></td>
+    {
+        "id": number,
+        "created_at": number,
+        "updated_at": number?,
+        "random_id": string,
+        "title_id": string,
+        "title": string,
+        "text": string,
+        "points": number,
+        "vote": "UPVOTE|DOWNVOTE|NONE",
+        "comments": number,
+        "subjeddit": {
+            "id": number,
+            "name": string,
+            "image": string
+        },
+        "poster": {
+            "id": number,
+            "username": string
+        }
+    }
+    ...
+]</pre></td>
+    <td>Yes</td>
+</tr>
+
+<tr>
+	<td>GET</td>
+	<td>/api/post/{subjeddit_name}/{random_id}/{title_id}</td>
+	<td></td>
+	<td><pre>{
+    "id": number,
+    "created_at": number,
+    "updated_at": number?,
+    "random_id": string,
+    "title_id": string,
+    "title": string,
+    "text": string,
+    "points": number,
+    "vote": "UPVOTE|DOWNVOTE|NONE",
+    "comments": number,
+    "subjeddit": {
+        "id": number,
+        "name": string,
+        "image": string
+    },
+    "poster": {
+        "id": number,
+        "username": string
+    }
+}</pre></td>
+    <td>Optional (All votes will be "NONE")</td>
+</tr>
+
+<tr>
+	<td>GET</td>
+	<td>/api/post/{id}/comments</td>
+	<td></td>
+	<td><pre>[
+    {
+        "created_at": number,
+        "updated_at": number,
+        "text": string,
+        "points": number,
+        "vote": "UPVOTE|DOWNVOTE|NONE",
+        "user": {
+            "id": number,
+            "username": string
+        },
+        "replies": [
+            ...
+        ]
+    }
+    ...
+]</pre></td>
+    <td>Optional (All votes will be "NONE")</td>
+</tr>
+
+<tr>
+	<td>POST</td>
+	<td>/api/post/{id}/comments</td>
+	<td><pre>{
+    "text": string,
+    "parent_comment_id": number?
+}</pre></td>
+    <td></td>
+    <td>Yes</td>
+</tr>
+
+<tr>
+	<td>GET</td>
+	<td>/api/subjeddit/{name}/info</td>
+	<td></td>
+	<td><pre>{
+    "id": number,
+    "name": string,
+    "image": string,
+    "description": string,
+    "subscribed": boolean,
+    "subscribers": number
+}</pre></td>
+    <td>Optional ("subscribed" will be false)</td>
+</tr>
+
+<tr>
+	<td>GET</td>
+	<td>/api/subjeddit/{name}/posts?sort_by={top|new}&offset={number}</td>
+	<td></td>
+	<td><pre>[
+    {
+        "id": number,
+        "created_at": number,
+        "updated_at": number?,
+        "random_id": string,
+        "title_id": string,
+        "title": string,
+        "text": string,
+        "points": number,
+        "vote": "UPVOTE|DOWNVOTE|NONE",
+        "comments": number,
+        "subjeddit": {
+            "id": number,
+            "name": string,
+            "image": string
+        },
+        "poster": {
+            "id": number,
+            "username": string
+        }
+    }
+    ...
+]</pre></td>
+    <td>Optional (All votes will be "NONE")</td>
+</tr>
+
+<tr>
+	<td>POST</td>
+	<td>/api/subjeddit/{name}/subscribe</td>
+	<td><pre></pre></td>
+    <td></td>
+    <td>Yes</td>
+</tr>
+
+<tr>
+	<td>POST</td>
+	<td>/api/subjeddit/{name}/unsubscribe</td>
+	<td><pre></pre></td>
+    <td></td>
+    <td>Yes</td>
+</tr>
+
+<tr>
+	<td>GET</td>
+	<td>/api/user/{username}/posts?sort_by={top|new}&offset={number}</td>
+	<td></td>
+	<td><pre>[
+    {
+        "id": number,
+        "created_at": number,
+        "updated_at": number?,
+        "random_id": string,
+        "title_id": string,
+        "title": string,
+        "text": string,
+        "points": number,
+        "vote": "UPVOTE|DOWNVOTE|NONE",
+        "comments": number,
+        "subjeddit": {
+            "id": number,
+            "name": string,
+            "image": string
+        },
+        "poster": {
+            "id": number,
+            "username": string
+        }
+    }
+    ...
+]</pre></td>
+    <td>Optional (All votes will be "NONE")</td>
+</tr>
+
+<tr>
+	<td>GET</td>
+	<td>/api/user/{username}/comments</td>
+	<td></td>
+	<td><pre>[
+    {
+        "created_at": number
+        "updated_at": number
+        "text": string
+        "points": number
+        "user": {
+            "id": number,
+            "username": string
+        }
+        "post": {
+            "id": number,
+            "title": string,
+            "subjeddit": {
+                "id": number,
+                "name": string
+            },
+            "poster": {
+                "id": number,
+                "username": string
+            }
+        }
+    }
+    ...
+]</pre></td>
+    <td>No</td>
+</tr>
+
+<tr>
+	<td>GET</td>
+	<td>/api/user/{username}/info</td>
+	<td><pre></pre></td>
+    <td><pre>{
+    "username": string,
+    "first_name": string,
+    "last_name": string    
+}</pre></td>
+    <td>No</td>
+</tr>
+
+<tr>
+	<td>GET</td>
+	<td>/api/user/me/info</td>
+	<td><pre></pre></td>
+    <td><pre>{
+    "username": string,
+    "first_name": string,
+    "last_name": string    
+}</pre></td>
+    <td>Yes</td>
+</tr>
+
+<tr>
+	<td>POST</td>
+	<td>/api/vote/post</td>
+	<td><pre>{
+    "id": number,
+    "vote_type": "UPVOTE|DOWNVOTE|NONE"
+}</pre></td>
+    <td></td>
+    <td>Yes</td>
+</tr>
+
+<tr>
+	<td>POST</td>
+	<td>/api/vote/comment</td>
+	<td><pre>{
+    "id": number,
+    "vote_type": "UPVOTE|DOWNVOTE|NONE"
+}</pre></td>
+    <td></td>
+    <td>Yes</td>
 </tr>
 
 </table>
-
-
-### GET(token) /api/feed
-
-
-Query string parameters:
-
-* ` sort_by=top|new`
-* `offset` Gets the next 20 posts from this number (0 to get the first posts)
-
-Response:
-```
-[
-	{
-		"id": number,
-		"created_at": number,
-		"updated_at": number?,
-
-		"random_id": string,
-		"title_id": string,
-		
-		"title": string,
-		"text": string,
-		"points": number,
-		"vote": "UPVOTE|DOWNVOTE|null",
-		"comments": number,
-
-		"subjeddit": {
-
-		}
-	}
-]
-```
-
-
-### GET()
