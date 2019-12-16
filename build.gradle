@@ -44,8 +44,11 @@ repositories {
 
 
 dependencies {
+	compile group: 'org.hibernate', name: 'hibernate-core', version: '5.4.10.Final'
+	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '5.4.10.Final'
+
 	compile('org.springframework.boot:spring-boot-starter-actuator')
-	compile('org.springframework.boot:spring-boot-starter-data-jpa')
+//	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.boot:spring-boot-starter-security')
 	compile('mysql:mysql-connector-java')
@@ -59,7 +62,14 @@ dependencies {
 	compile('org.jetbrains.exposed:exposed:0.10.5')
 //	compile "mysql:mysql-connector-java:5.1.46"
 	compile("org.xerial:sqlite-jdbc:3.21.0.1")
-	compile("org.mindrot:jbcrypt:0.3")
+//	compile("org.mindrot:jbcrypt:0.3")
+	compile group: 'org.mindrot', name: 'jbcrypt', version: '0.3m'
+	// https://mvnrepository.com/artifact/org.hibernate/hibernate-core
+
+
+// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-jdbc
+//	compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: '2.2.2.RELEASE'
+
 
 	compile('com.fasterxml.jackson.module:jackson-module-kotlin')
 	compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
