@@ -119,6 +119,7 @@ class CommentController {
                 it[parent] = if (commentJson.parent_comment_id != null) EntityID(commentJson.parent_comment_id, Comment) else null
                 it[user] = EntityID(userId, User)
                 it[text] = commentJson.text
+                it[points] = 0
             }
         }
     }
