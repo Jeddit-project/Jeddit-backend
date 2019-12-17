@@ -1,11 +1,13 @@
 package com.jeddit.backend.authentification.config
 
+//import com.jeddit.backend.authentification.security.service.JwtUserDetailsService
+
 import com.jeddit.backend.authentification.security.JwtAuthenticationEntryPoint
 import com.jeddit.backend.authentification.security.JwtAuthorizationTokenFilter
 import com.jeddit.backend.authentification.security.service.JwtUserDetailsService
-//import com.jeddit.backend.authentification.security.service.JwtUserDetailsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
@@ -19,12 +21,18 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-import org.springframework.security.crypto.password.NoOpPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
+import org.springframework.web.filter.CorsFilter
+import org.springframework.web.servlet.config.annotation.EnableWebMvc
+import javax.annotation.PostConstruct
+
 
 @Configuration
 @EnableWebSecurity
+@EnableWebMvc
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 class WebSecurityConfig : WebSecurityConfigurerAdapter() {
 
@@ -67,27 +75,28 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     override fun configure(httpSecurity: HttpSecurity) {
         httpSecurity
                 // we don't need CSRF because our token is invulnerable
-                .csrf().disable()
+            .csrf().disable()
 
-                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+            .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
 
-                // don't create session
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+            // don't create session
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 
-                .authorizeRequests()
+            .authorizeRequests()
 
-                // Un-secure H2 Database
+            // Un-secure H2 Database
 //                .antMatchers("/h2-console/**/**").permitAll()
 
-                .antMatchers(
-                        "/auth/**",
-                        "/api/post/*/comments",
-                        "/api/post/**",
-                        "/api/subjeddit/*/info",
+            .antMatchers(
+                "/auth/**",
+                "/api/post/*/comments",
+                "/api/post/**",
+                "/api/subjeddit/*/info",
 //                        "/api/user/*/info",
-                        "/api/user/*/**",
-                        "/api/registration/**").permitAll()
-                .anyRequest().authenticated()
+                "/api/user/*/**",
+                "/api/registration/**"
+            ).permitAll()
+            .anyRequest().authenticated()
 
         httpSecurity
                 .addFilterBefore(authenticationTokenFilter!!, UsernamePasswordAuthenticationFilter::class.java)
@@ -128,5 +137,21 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
 //                .and()
 //                .ignoring()
 //                .antMatchers("/h2-console/**/**")
+    }
+
+    companion object {
+        @Bean
+        fun corsFilterBean(): FilterRegistrationBean<*>? {
+            val source = UrlBasedCorsConfigurationSource()
+            val config = CorsConfiguration()
+            config.allowCredentials = true
+            config.addAllowedOrigin("http://localhost:4200")
+            config.addAllowedHeader("*")
+            config.addAllowedMethod("*")
+            source.registerCorsConfiguration("/**", config)
+            val bean = FilterRegistrationBean(CorsFilter(source))
+            bean.order = Int.MIN_VALUE
+            return bean
+        }
     }
 }
